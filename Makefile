@@ -17,6 +17,11 @@ i-all:
 i-express:
 	npm install express
 
+
+#https://www.bibmath.net/forums/viewtopic.php?id=16473
+i-cors:
+	npm install cors
+
 i-bodyparser:
 	npm install body-parser --save
 
