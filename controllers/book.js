@@ -1,10 +1,15 @@
-const {find} = require("../models/book");
+const Book = require("../models/Book");
+
 async function getBooks(req, res) {
-    let books = await find({})
+    let books = await Book.find({})
     res.status(200).json(books);
 }
 
 async function newBook(req, res) {
+    const {...data} = req.body;
+    console.log("new book function")
+    console.log(data)
 
 }
-module.exports = getBooks;
+
+module.exports = {getBooks, newBook};
