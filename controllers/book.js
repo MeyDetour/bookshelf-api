@@ -1,15 +1,122 @@
 const Book = require("../models/Book");
+const path = require("path");
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+    destination: './uploads',
+    filename: (req, file, cb) => {
+        const filename = file.originalname.replace(/\s/g, '');
+
+        cb(null, filename);
+    }
+});
+const upload = multer({storage: storage});
+
+
+async function uploadImageToBook(req, res) {
+    try {
+
+        upload.single('image')(req, res, async (err) => {
+            if (err) {
+                return res.status(500).send('Error uploading file.');
+            }
+            if (!req.file) {
+                return res.status(400).send('No file uploaded.');
+            }
+            const {id} = req.params
+            const book = await Book.findById(id)
+
+            if (!book) return res.status(404).send('Book not found.');
+
+            const filename = req.file.filename.replace(/\s/g, '');
+            console.log(filename);
+            book.image = `/uploads/${encodeURIComponent(req.file.filename)}`;
+            await book.save();
+            console.log(`Image uploaded: ${filename}`);
+
+            res.send('File uploaded successfully.');
+        });
+    } catch (e) {
+        res.status(500).send('Error upload image to book. :' + e);
+    }
+}
 
 async function getBooks(req, res) {
-    let books = await Book.find({})
+    console.log("get all books")
+    let books = await Book.find({}).select('title image description publishedYear ')
     res.status(200).json(books);
 }
 
 async function newBook(req, res) {
-    const {...data} = req.body;
-    console.log("new book function")
-    console.log(data)
+    try {
+        console.log("create book")
+        const {...data} = req.body;
+        console.log(data)
+        if (!data.title) return res.status(400).send('Please enter name');
+        let book = await Book.create({...data})
+        console.log(book)
+        console.log(book.title)
+        console.log(book.description)
+        console.log(book.publishedYear)
+        console.log(book.image)
+        res.status(201).json({"message": "ok"});
+    } catch (e) {
+        res.status(500).send('Error creating book. :' + e);
+    }
+}
+
+
+async function editBook(req, res) {
+    try {
+
+        const {id} = req.params
+        const book = await Book.findById(id)
+        const {title, description, publishedYear} = req.body
+
+        if (!book) return res.status(404).send('Book not found.');
+
+        if (title) book.title = title
+        if (description) book.description = description
+        if (publishedYear) book.publishedYear = publishedYear
+
+        await book.save();
+
+        res.status(200).json({"message": "ok"});
+    } catch (e) {
+        res.status(500).send('Error updating book. :' + e);
+    }
+}
+
+async function removeImage(req, res) {
+    try {
+
+        const {id} = req.params
+        const book = await Book.findById(id)
+
+        if (!book) return res.status(404).send('Book not found.');
+        book.image = null
+        await book.save()
+        res.status(200).json({"message": "ok"});
+    } catch (e) {
+        res.status(500).send('Error remove book-s image. :' + e);
+    }
 
 }
 
-module.exports = {getBooks, newBook};
+async function removeBook(req, res) {
+    try {
+        const {id} = req.params
+        const book = await Book.findById(id)
+
+        if (!book) return res.status(404).send('Book not found.');
+
+        await book.deleteOne()
+
+        res.status(200).json({"message": "ok"});
+    } catch (e) {
+        res.status(500).send('Error remove book. :' + e);
+    }
+}
+
+module.exports = {getBooks, newBook, uploadImageToBook, editBook,removeBook,removeImage};
