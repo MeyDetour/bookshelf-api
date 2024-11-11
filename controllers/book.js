@@ -44,7 +44,7 @@ async function uploadImageToBook(req, res) {
 
 async function getBooks(req, res) {
     console.log("get all books")
-    let books = await Book.find({}).select('title image description publishedYear ').populate({
+    let books = await Book.find({}).select('title image description publishedYear author ine ').populate({
         path: 'bookshelves',
         select:"name"
     })
@@ -55,14 +55,10 @@ async function newBook(req, res) {
     try {
         console.log("create book")
         const {...data} = req.body;
-        console.log(data)
+
         if (!data.title) return res.status(400).send('Please enter name');
         let book = await Book.create({...data})
-        console.log(book)
-        console.log(book.title)
-        console.log(book.description)
-        console.log(book.publishedYear)
-        console.log(book.image)
+
         res.status(201).json({"message": "ok"});
     } catch (e) {
         res.status(500).send('Error creating book. :' + e);
@@ -75,13 +71,15 @@ async function editBook(req, res) {
 
         const {id} = req.params
         const book = await Book.findById(id)
-        const {title, description, publishedYear} = req.body
+        const {title, description, publishedYear,ine,author} = req.body
 
         if (!book) return res.status(404).send('Book not found.');
 
         if (title) book.title = title
         if (description) book.description = description
         if (publishedYear) book.publishedYear = publishedYear
+        if (author) book.author = author
+        if (ine) book.ine = ine
 
         await book.save();
 

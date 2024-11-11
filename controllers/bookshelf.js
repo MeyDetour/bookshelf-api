@@ -5,7 +5,7 @@ const Book = require("../models/Book");
 async function getBookshelves(req, res) {
     const bookshelves = await Bookshelf.find({}).select('name').populate({
         path: 'books',
-        select: 'title publishedYear description image'
+        select: 'title publishedYear description image author ine'
     })
     return res.status(200).json(bookshelves)
 }
@@ -89,7 +89,6 @@ async function addBookToBookshelf(req, res) {
         if (!book) return res.status(404).send('Book not found.');
 
         if (!book.bookshelves.includes(bookshelfId))  {
-
             bookshelf.books.push(bookId)
             await bookshelf.save()
             book.bookshelves.push(bookshelfId)

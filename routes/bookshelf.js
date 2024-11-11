@@ -5,7 +5,7 @@ const {getBookshelves,newBookshelf,getBookshelf,editBookshelf,removeBookshelf,ad
 router.get('/bookshelves',getBookshelves)
 router.get('/bookshelves/get/:id',getBookshelf)
 router.post('/bookshelves/new',newBookshelf)
-router.put('/bookshelves/edit/:id',editBookshelf)
+router.put('/bookshelf/edit/:id',editBookshelf)
 router.delete('/bookshelves/remove/:id',removeBookshelf)
 router.patch('/bookshelf/:bookshelfId/add/book/:bookId',addBookToBookshelf)
 
