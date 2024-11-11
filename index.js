@@ -23,7 +23,7 @@ app.use("/", bookshelfRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use((req, res, next) => {
-    res.status(404).send({ message: 'No route found ! Read the doc please <3' });
+    res.status(404).send({ message: 'No route found ! Read the doc please <3 \n\n\n Verify the method of your request' });
 });
 
 app.listen(port, () => {

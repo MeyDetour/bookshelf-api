@@ -44,7 +44,10 @@ async function uploadImageToBook(req, res) {
 
 async function getBooks(req, res) {
     console.log("get all books")
-    let books = await Book.find({}).select('title image description publishedYear ')
+    let books = await Book.find({}).select('title image description publishedYear ').populate({
+        path: 'bookshelves',
+        select:"name"
+    })
     res.status(200).json(books);
 }
 
@@ -108,7 +111,6 @@ async function removeBook(req, res) {
     try {
         const {id} = req.params
         const book = await Book.findById(id)
-
         if (!book) return res.status(404).send('Book not found.');
 
         await book.deleteOne()
@@ -118,5 +120,6 @@ async function removeBook(req, res) {
         res.status(500).send('Error remove book. :' + e);
     }
 }
-
+//recherche de ligne
+//Scna de qrcode
 module.exports = {getBooks, newBook, uploadImageToBook, editBook,removeBook,removeImage};

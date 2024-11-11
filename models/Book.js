@@ -19,11 +19,13 @@ const Book = new mongoose.Schema(
             type: Number,
             max: new Date().getFullYear()
         },
-        bookshelf : {
-            type:mongoose.Types.ObjectId,
-            ref:'book',
-        }
+        bookshelves: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: 'Bookshelf',
+            }
+        ],
     }
 )
-
+    //nom d'auteur genre, INE
 module.exports = mongoose.model('Book',Book);
