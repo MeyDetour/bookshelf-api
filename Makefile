@@ -17,6 +17,9 @@ i-all:
 i-express:
 	npm install express
 
+i-jwt:
+	npm i express-jwt
+
 
 #https://www.bibmath.net/forums/viewtopic.php?id=16473
 i-cors:
