@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="bleu">
+    <h1 class="caramel">Bookshelf API</h1>
+</div>
+<div class="white">
+</div>
+<div class="bleu">
+
+    <%- include('partials/routeTemplate'); %>
+
+
+</div>
+<div class="white">
+
+</div>
+<div class="bleu">
+
+</div>
+<div class="white">
+
+</div>
+<div class="bleu">
+
+</div>
+<div class="white">
+
+</div>
+<div class="bleu">
+
+</div>
+<div class="white">
+
+</div>
+<div class="bleu">
+
+</div>
+<div class="white">
+
+</div>
+<div class="bleu">
+
+</div>
+<div class="white">
+
+</div>
+
+
+<script defer src="/js/script.js">
+
+    let allPre = document.querySelectorAll("pre")
+    allPre.forEach((pre) => {
+        let res = pre.innerHTML.replaceAll(`"int"`, "<span class='intColor'>int</span>")
+        res = res.replaceAll(`"boolean"`, "<span class='booleanColor'>boolean</span>")
+        res = res.replaceAll(`"string"`, "<span class='stringColor'>string</span>")
+
+
+
+        pre.innerHTML = res
+    })
+
+</script>
+</body>
+</html>

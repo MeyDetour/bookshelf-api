@@ -2,6 +2,7 @@ const Bookshelf = require("../models/Bookshelf");
 const Book = require("../models/Book");
 
 
+
 async function getBookshelves(req, res) {
     const bookshelves = await Bookshelf.find({}).select('name').populate({
         path: 'books',
@@ -30,15 +31,15 @@ async function getBookshelf(req, res) {
 async function newBookshelf(req, res) {
     try {
         const {name} = req.body;
-        if (!name) return res.status(400).send('Please enter name.');
+        if (!name) return res.status(400).json({'message':'Please enter name.'});
 
         let bookshelfExist = await Bookshelf.findOne({name})
         if (bookshelfExist) return res.status(404).send('bookshelf name is already taken.');
 
-        await Bookshelf.create({name})
+        await Bookshelf.create(name)
         return res.status(201).json({"message": "ok"});
     } catch (e) {
-        return res.status(500).send('New bookshelf .' + e);
+        return res.status(500).json({'message' :'Error during creation of bookshelf .' + e});
     }
 }
 

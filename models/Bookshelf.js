@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Bookshelf = new mongoose.Schema({
     name: {
-        type : mongoose.Schema.Types.String,
+        type : mongoose.SchemaTypes.String
     }, books: [
         {
             type: mongoose.Types.ObjectId,

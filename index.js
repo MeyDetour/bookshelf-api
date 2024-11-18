@@ -2,12 +2,20 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 3000
+
+
+const dotenv = require('dotenv');
+dotenv.config();
+process.env.TOKEN_SECRET;
 const {  expressjwt: jwt } = require("express-jwt");
+
 const bookRouter = require('./routes/book.js');
 const bookshelfRouter = require('./routes/bookshelf.js');
 const userRouter = require('./routes/user.js');
+
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const {verifyToken} = require("./controllers/tokenVerify");
 const mongodUri = 'mongodb://localhost:27017/bookshelf';
 
 //for database
@@ -21,19 +29,36 @@ mongoose.connect(mongodUri)
 //for body data
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded());
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+
+/*
+console.log(require('crypto').randomBytes(64).toString('hex'))
+*/
+
+app.get('/', function(req, res) {
+    res.render('base');
+});
 
 //make all routes protected
 app.use(
     jwt({
-        secret: "shhhhhhared-secret",
+        secret: process.env.TOKEN_SECRET,
         algorithms: ["HS256"],
-    }).unless({ path: ["/login", "/register"] }),
+    }).unless({ path: ["/login", "/register","/public"] }),
 );
+app.use('/api', async (req, res, next) => {
+    const hasValidToken = await verifyToken(req);
+    if (!hasValidToken) {
+        return res.status(403).json({ message: 'Invalid token' });
+    }
+    next(); // Si le token est valide, on passe à la route suivante
+});
 
 //for route
-app.use("/", bookRouter);
-app.use("/", bookshelfRouter);
-app.use("/", userRouter);
+app.use("/api", bookRouter);
+app.use("/api", bookshelfRouter);
+app.use("", userRouter);
 
 //we cant see images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -43,7 +68,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //customize error
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        res.status(401).json({ message: 'No authorization token was found or token is invalid' });
+        res.status(401).json({ message: 'No authorization token was found or token is invalid :',err });
     } else {
         next(err);
     }

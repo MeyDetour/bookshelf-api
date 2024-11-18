@@ -1,7 +1,11 @@
 const Book = require("../models/Book");
 const path = require("path");
 const multer = require('multer');
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const {verifyToken} = require("./tokenVerify");
 
+dotenv.config();
 
 const storage = multer.diskStorage({
     destination: './uploads',
@@ -43,12 +47,17 @@ async function uploadImageToBook(req, res) {
 }
 
 async function getBooks(req, res) {
-    console.log("get all books")
-    let books = await Book.find({}).select('title image description publishedYear author ine ').populate({
-        path: 'bookshelves',
-        select:"name"
-    })
-    res.status(200).json(books);
+    try {
+
+        console.log("get all books")
+        let books = await Book.find({}).select('title image description publishedYear author ine ').populate({
+            path: 'bookshelves',
+            select: "name"
+        })
+        res.status(200).json(books);
+    } catch (err) {
+        return res.sendStatus(400); // Token invalide ou expiré
+    }
 }
 
 async function newBook(req, res) {
@@ -71,7 +80,7 @@ async function editBook(req, res) {
 
         const {id} = req.params
         const book = await Book.findById(id)
-        const {title, description, publishedYear,ine,author} = req.body
+        const {title, description, publishedYear, ine, author} = req.body
 
         if (!book) return res.status(404).send('Book not found.');
 
@@ -118,6 +127,7 @@ async function removeBook(req, res) {
         res.status(500).send('Error remove book. :' + e);
     }
 }
+
 //recherche de ligne
 //Scna de qrcode
-module.exports = {getBooks, newBook, uploadImageToBook, editBook,removeBook,removeImage};
+module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage};

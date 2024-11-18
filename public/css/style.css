@@ -1,0 +1,89 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Caramel&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+.caramel{
+        font-family: "Caramel", cursive;
+        font-weight: 400;
+        font-style: normal;
+
+
+}
+
+h1  {
+
+    font-size: 106px;
+    font-weight: 400;
+}
+.bleu, .white {
+    height: 85vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 30%;
+    box-sizing: border-box;
+}
+
+.bleu {
+    background: #ececf9;;
+}
+
+.white {
+
+    background: #f3f3f3;
+}
+
+/*===============COLOR CLASS=============*/
+.intColor{
+    color: #8181ff;
+}.booleanColor{
+     color: #ff8181;
+ }.stringColor{
+      color: #b0ff81;
+  }
+
+pre .json{
+    position: absolute;
+
+    font-size: 15px;
+    top: 10px;
+    right: 10px;
+
+
+    color: #756c6c;
+    text-shadow: #1a1a1a 0px 0px 10px;
+}
+pre .json {
+}
+pre {
+    background: #393939;
+    border: #575757 1px solid;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: antiquewhite;
+    position: relative;
+    text-shadow: none;
+
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+}
+kbd{
+    background: #dbd6ff;
+    padding: 7px 14px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-inline: 25px;
+}
