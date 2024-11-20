@@ -23,14 +23,18 @@ h1  {
     font-size: 106px;
     font-weight: 400;
 }
+h2 {
+    font-size: 34px;
+}
 .bleu, .white {
-    height: 85vh;
+    min-height: 75vh;
+    height: fit-content;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-inline: 30%;
+    padding-inline: 20%;
     box-sizing: border-box;
 }
 
@@ -42,7 +46,11 @@ h1  {
 
     background: #f3f3f3;
 }
-
+.alignItems{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 /*===============COLOR CLASS=============*/
 .intColor{
     color: #8181ff;
@@ -51,6 +59,22 @@ h1  {
  }.stringColor{
       color: #b0ff81;
   }
+
+/*===============Request=============*/
+  .rowWithPre{
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+  }
+.rowWithPre .preContainer{
+    width: 46%;
+    height: 100%;
+}
+
+.rowWithPre .preContainer .span{
+    height: 10%;
+}
 
 pre .json{
     position: absolute;
@@ -71,6 +95,7 @@ pre {
     padding: 10px;
     border-radius: 4px;
     width: 100%;
+    height: 90%;
     box-sizing: border-box;
     color: antiquewhite;
     position: relative;

@@ -2,7 +2,6 @@ const Bookshelf = require("../models/Bookshelf");
 const Book = require("../models/Book");
 
 
-
 async function getBookshelves(req, res) {
     const bookshelves = await Bookshelf.find({}).select('name').populate({
         path: 'books',
@@ -15,7 +14,10 @@ async function getBookshelf(req, res) {
     try {
         const {id} = req.params;
 
-        const bookshelf = await Bookshelf.findById(id).select('name').lean();
+        const bookshelf = await Bookshelf.findById(id).select('name').select('name').populate({
+            path: 'books',
+            select: 'title publishedYear description image author ine'
+        });
         if (!bookshelf) {
             return res.status(404).send('No bookshelf found.');
         }
@@ -31,15 +33,15 @@ async function getBookshelf(req, res) {
 async function newBookshelf(req, res) {
     try {
         const {name} = req.body;
-        if (!name) return res.status(400).json({'message':'Please enter name.'});
+        if (!name) return res.status(400).json({'message': 'Please enter name.'});
 
         let bookshelfExist = await Bookshelf.findOne({name})
         if (bookshelfExist) return res.status(404).send('bookshelf name is already taken.');
 
-        await Bookshelf.create(name)
+        await Bookshelf.create({name})
         return res.status(201).json({"message": "ok"});
     } catch (e) {
-        return res.status(500).json({'message' :'Error during creation of bookshelf .' + e});
+        return res.status(500).json({'message': 'Error during creation of bookshelf .' + e});
     }
 }
 
@@ -89,7 +91,7 @@ async function addBookToBookshelf(req, res) {
         const book = await Book.findById(bookId)
         if (!book) return res.status(404).send('Book not found.');
 
-        if (!book.bookshelves.includes(bookshelfId))  {
+        if (!book.bookshelves.includes(bookshelfId)) {
             bookshelf.books.push(bookId)
             await bookshelf.save()
             book.bookshelves.push(bookshelfId)
@@ -102,5 +104,54 @@ async function addBookToBookshelf(req, res) {
     }
 }
 
+async function sortBookshelf(req, res) {
+ try{   const {type} = req.params;
+    let bookshelves = [];
+    if (!type) return res.status(404).send('type not found.');
+    switch (type) {
+        case 'name-asc':
+            bookshelves = await Bookshelf.find({}).sort({name: 1})
+            break;
+        case 'name-dsc':
+            bookshelves = await Bookshelf.find({}).sort({name: -1})
+            break;
+        case 'books-asc':
+            // https://mongoosejs.com/docs/api/aggregate.html#Aggregate()
+            bookshelves = await Bookshelf.aggregate(
+                [
+                    {$project: {bookNumber: {$size: "$books"}}},
+                    {$sort: {bookNumber: 1}}
+                ]
+            )
+            break;
+        case 'books-dsc':
+            bookshelves = await Bookshelf.aggregate(
+                [
+                    {$project: {
+                        bookNumber: {$size: "$books"}
+                    }},
+                    {$sort: {bookNumber: -1}}
+                ]
+            )
+            break;
+        default :
+            bookshelves = await Bookshelf.find({})
 
-module.exports = {getBookshelves, newBookshelf, getBookshelf, editBookshelf, removeBookshelf, addBookToBookshelf};
+    }
+
+
+    return res.status(200).json(bookshelves);
+} catch (e) {
+    res.status(500).send('Error remove book. :' + e);
+}
+}
+
+module.exports = {
+    getBookshelves,
+    newBookshelf,
+    getBookshelf,
+    editBookshelf,
+    removeBookshelf,
+    addBookToBookshelf,
+    sortBookshelf
+};

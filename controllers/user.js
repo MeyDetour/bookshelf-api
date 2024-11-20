@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 dotenv.config();
 
+
 async function registerUser(req, res) {
     try {
         const {email, password} = req.body

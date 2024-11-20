@@ -2,8 +2,11 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 3000
-
-
+const cors = require('cors');
+const corsOptions = {
+    origin: '*',  // Allows requests from all domains. Specify actual domain in production for security.
+    optionsSuccessStatus: 200 // Ensure compatibility by setting OPTIONS success status to 200 OK.
+};
 const dotenv = require('dotenv');
 dotenv.config();
 process.env.TOKEN_SECRET;
@@ -12,6 +15,7 @@ const {  expressjwt: jwt } = require("express-jwt");
 const bookRouter = require('./routes/book.js');
 const bookshelfRouter = require('./routes/bookshelf.js');
 const userRouter = require('./routes/user.js');
+const docRouter = require('./routes/documentation.js');
 
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
@@ -29,6 +33,7 @@ mongoose.connect(mongodUri)
 //for body data
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded());
+app.use(cors(corsOptions));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
@@ -36,16 +41,14 @@ app.use(express.static('public'));
 console.log(require('crypto').randomBytes(64).toString('hex'))
 */
 
-app.get('/', function(req, res) {
-    res.render('base');
-});
+
 
 //make all routes protected
 app.use(
     jwt({
         secret: process.env.TOKEN_SECRET,
         algorithms: ["HS256"],
-    }).unless({ path: ["/login", "/register","/public"] }),
+    }).unless({ path: ["/login", "/register","/public","/doc",'/send-email'] }),
 );
 app.use('/api', async (req, res, next) => {
     const hasValidToken = await verifyToken(req);
@@ -56,6 +59,7 @@ app.use('/api', async (req, res, next) => {
 });
 
 //for route
+app.use("/", docRouter);
 app.use("/api", bookRouter);
 app.use("/api", bookshelfRouter);
 app.use("", userRouter);

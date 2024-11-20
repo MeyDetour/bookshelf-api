@@ -8,48 +8,15 @@
 <body>
 <div class="bleu">
     <h1 class="caramel">Bookshelf API</h1>
+    pPlease note that in JSON responses, when you see [], it indicates that there can be multiple instances or even the same content within the brackets.
 </div>
-<div class="white">
-</div>
-<div class="bleu">
+<% routes.forEach(function(route,index){ %>
+    <div class="<%= index % 2 !== 0 ? 'bleu' : 'white' %>">
+        <%- include('partials/routeTemplate', { route: route }); %>
+    </div>
+<% }); %>
 
-    <%- include('partials/routeTemplate'); %>
 
-
-</div>
-<div class="white">
-
-</div>
-<div class="bleu">
-
-</div>
-<div class="white">
-
-</div>
-<div class="bleu">
-
-</div>
-<div class="white">
-
-</div>
-<div class="bleu">
-
-</div>
-<div class="white">
-
-</div>
-<div class="bleu">
-
-</div>
-<div class="white">
-
-</div>
-<div class="bleu">
-
-</div>
-<div class="white">
-
-</div>
 
 
 <script defer src="/js/script.js">

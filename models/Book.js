@@ -47,4 +47,6 @@ const Book = new mongoose.Schema(
         toObject : {getters:true},
     }
 )
+Book.index({title:'text',contenu:'text'})
+Book.index({ publishedYear: 1 });
 module.exports = mongoose.model('Book',Book);

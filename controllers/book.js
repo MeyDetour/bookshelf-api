@@ -3,19 +3,21 @@ const path = require("path");
 const multer = require('multer');
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const {verifyToken} = require("./tokenVerify");
-
+const {v4: uuidv4} = require('uuid'); // Importer UUID
+const fs = require('fs');
+const res = require("express/lib/response");
 dotenv.config();
 
 const storage = multer.diskStorage({
     destination: './uploads',
     filename: (req, file, cb) => {
-        const filename = file.originalname.replace(/\s/g, '');
 
-        cb(null, filename);
+        const uniqueName = uuidv4() + path.extname(file.originalname);
+        cb(null, uniqueName);
     }
 });
 const upload = multer({storage: storage});
+
 
 
 async function uploadImageToBook(req, res) {
@@ -30,16 +32,19 @@ async function uploadImageToBook(req, res) {
             }
             const {id} = req.params
             const book = await Book.findById(id)
-
             if (!book) return res.status(404).send('Book not found.');
 
-            const filename = req.file.filename.replace(/\s/g, '');
-            console.log(filename);
+            if (book.image) {
+                let removal = removeImageFromServer(book)
+                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+
+            }
+
+
             book.image = `/uploads/${encodeURIComponent(req.file.filename)}`;
             await book.save();
-            console.log(`Image uploaded: ${filename}`);
 
-            res.send('File uploaded successfully.');
+            res.status(201).json({"message": "ok"});
         });
     } catch (e) {
         res.status(500).send('Error upload image to book. :' + e);
@@ -105,11 +110,17 @@ async function removeImage(req, res) {
         const book = await Book.findById(id)
 
         if (!book) return res.status(404).send('Book not found.');
-        book.image = null
-        await book.save()
-        res.status(200).json({"message": "ok"});
+        if (book.image == null) return res.status(200).json({"message": "ok"});
+
+        let removal = removeImageFromServer(book)
+        if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+
+
+        return res.status(200).json({"message": "ok"});
+
+
     } catch (e) {
-        res.status(500).send('Error remove book-s image. :' + e);
+        res.status(500).send('Error remove books image. :' + e);
     }
 
 }
@@ -119,6 +130,10 @@ async function removeBook(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
+        if (book.image) {
+            let removal = removeImageFromServer(book)
+            if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+        }
 
         await book.deleteOne()
 
@@ -128,6 +143,33 @@ async function removeBook(req, res) {
     }
 }
 
+async function searchBook(req, res) {
+    try {
+        const {searchTerm} = req.body;
+        console.log(searchTerm)
+        //https://www.geeksforgeeks.org/how-to-do-a-full-text-search-in-mongodb-using-mongoose/
+        const books = await Book.find({$text: {$search: searchTerm}})
+        res.status(200).json(books);
+    } catch (e) {
+        res.status(500).send('Error remove book. :' + e);
+    }
+}
+
+function removeImageFromServer(book) {
+    const imagePath = path.join(__dirname + '/..' + book.image);
+
+    fs.unlink(imagePath, async (err) => {
+        if (err) {
+            return err;
+        }
+
+        book.image = null;
+        await book.save();
+        return null;
+    });
+    return null
+}
+
 //recherche de ligne
 //Scna de qrcode
-module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage};
+module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage, searchBook};
