@@ -6,8 +6,6 @@ const Book = new mongoose.Schema(
             type : mongoose.SchemaTypes.String,
             required:true,
             get:value  => value ? value : null,
-
-
         },
         description :{
             type :  mongoose.SchemaTypes.String,

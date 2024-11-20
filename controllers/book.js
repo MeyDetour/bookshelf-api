@@ -16,8 +16,21 @@ const storage = multer.diskStorage({
         cb(null, uniqueName);
     }
 });
-const upload = multer({storage: storage});
+const fileFilter = (req, file, cb) => {
+    // Allowed file types
+    const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true); // Accept the file
+    } else {
+        cb(new Error('Invalid file type. Only PNG, JPEG, and JPG are allowed.'));
+    }
+};
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter, // Apply the file filter
+    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5 MB
+});
 
 
 async function uploadImageToBook(req, res) {
