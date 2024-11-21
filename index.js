@@ -14,6 +14,7 @@ const {  expressjwt: jwt } = require("express-jwt");
 
 const bookRouter = require('./routes/book.js');
 const bookshelfRouter = require('./routes/bookshelf.js');
+const mailRouter = require('./routes/mail.js');
 const userRouter = require('./routes/user.js');
 const docRouter = require('./routes/documentation.js');
 
@@ -60,6 +61,7 @@ app.use('/api', async (req, res, next) => {
 
 //for route
 app.use("/", docRouter);
+app.use("/", mailRouter);
 app.use("/api", bookRouter);
 app.use("/api", bookshelfRouter);
 app.use("", userRouter);

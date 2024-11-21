@@ -159,7 +159,6 @@ async function removeBook(req, res) {
 async function searchBook(req, res) {
     try {
         const {searchTerm} = req.body;
-        console.log(searchTerm)
         //https://www.geeksforgeeks.org/how-to-do-a-full-text-search-in-mongodb-using-mongoose/
         const books = await Book.find({$text: {$search: searchTerm}})
         res.status(200).json(books);

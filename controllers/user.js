@@ -41,8 +41,6 @@ async function login(req, res) {
         if (!user) {
             return res.status(404).json('Not account found')
         }
-        console.log(user)
-        console.log("pasword :" ,user['password'])
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
