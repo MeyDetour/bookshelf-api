@@ -54,6 +54,9 @@ async function editBookshelf(req, res) {
 
 
         const {name} = req.body;
+        let bookshelfExist = await Bookshelf.findOne({name})
+        if (bookshelfExist) return res.status(404).send('bookshelf name is already taken.');
+
         if (!name) return res.status(400).send('Please enter name.');
 
         bookshelf.name = name;
@@ -74,6 +77,17 @@ async function removeBookshelf(req, res) {
 
         const booksAssociated = await Book.find({bookshelf: id})
         if (booksAssociated.length !== 0) return res.status(400).send('Bookshelf has many books');
+        for (const bookAssociated of booksAssociated) {
+            if (book.bookshelves.includes(id)) {
+            book.bookshelves = book.bookshelves.filter(id => id.toString() !== id);
+            await book.save();
+
+            bookshelf.books = bookshelf.books.filter(id => id.toString() !== bookAssociated.id);
+            await bookshelf.save();
+
+            return res.status(200).send('Bookshelf removed from book and book removed from bookshelf successfully.');
+        }
+        }
 
         await bookshelf.deleteOne()
         return res.status(200).json({"message": "ok"});

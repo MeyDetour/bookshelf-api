@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const {v4: uuidv4} = require('uuid'); // Importer UUID
 const fs = require('fs');
 const res = require("express/lib/response");
+const Bookshelf = require("../models/Bookshelf");
 dotenv.config();
 
 const storage = multer.diskStorage({
@@ -84,6 +85,7 @@ async function newBook(req, res) {
         const {...data} = req.body;
 
         if (!data.title) return res.status(400).send('Please enter name');
+        data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
         let book = await Book.create({...data})
 
         res.status(201).json({"message": "ok"});
@@ -98,11 +100,14 @@ async function editBook(req, res) {
 
         const {id} = req.params
         const book = await Book.findById(id)
-        const {title, description, publishedYear, ine, author} = req.body
+        let {title, description, publishedYear, ine, author} = req.body
 
         if (!book) return res.status(404).send('Book not found.');
 
-        if (title) book.title = title
+        if (title) {
+            title = String(title).charAt(0).toUpperCase() + String(title).slice(1)
+            book.title = title
+        }
         if (description) book.description = description
         if (publishedYear) book.publishedYear = publishedYear
         if (author) book.author = author
@@ -182,6 +187,33 @@ function removeImageFromServer(book) {
     return null
 }
 
+
+
+async function sortBooks(req, res) {
+    try{   const {type} = req.params;
+        let books = [];
+        if (!type) return res.status(404).send('type not found.');
+        switch (type) {
+            case 'title-asc':
+                books = await Book.find({}).sort({title: 1})
+                break;
+            case 'title-dsc':
+                books = await Book.find({}).sort({title: -1})
+                break;
+
+            default :
+                books = await Book.find({})
+
+        }
+
+
+        return res.status(200).json(books);
+    } catch (e) {
+        res.status(500).send('Error remove book. :' + e);
+    }
+}
+
+
 //recherche de ligne
 //Scna de qrcode
-module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage, searchBook};
+module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage, searchBook,sortBooks};

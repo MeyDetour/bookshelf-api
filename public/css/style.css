@@ -1,5 +1,5 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Caramel&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 body {
     margin: 0;
     padding: 0;
@@ -10,22 +10,26 @@ body {
     font-weight: 500;
     font-style: normal;
 }
-.caramel{
-        font-family: "Caramel", cursive;
-        font-weight: 400;
-        font-style: normal;
+
+.caramel {
+    font-family: "Caramel", cursive;
+    font-weight: 400;
+    font-style: normal;
 
 
 }
 
-h1  {
+h1 {
 
     font-size: 106px;
     font-weight: 400;
 }
+
 h2 {
+    margin-top: 0;
     font-size: 34px;
 }
+
 .bleu, .white {
     min-height: 75vh;
     height: fit-content;
@@ -46,37 +50,88 @@ h2 {
 
     background: #f3f3f3;
 }
-.alignItems{
+
+.alignItems {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+}
+.scrollToTop{
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+}
+
+.routesNavigation{
+    position: fixed;
+    top: 0px;
+    right: 74px;
+    width: 8%;
+    background: white;
+    padding: 5px 28px;
+    box-shadow: 0px 0px 13px 1px #0000001f;
+
+    display: flex;
+    cursor: pointer;
+}
+
+.routesNavigation span{
+    cursor: pointer;
+}
+.routesNavigation span:hover{
+    color: #676767;
 }
 /*===============COLOR CLASS=============*/
-.intColor{
-    color: #8181ff;
-}.booleanColor{
-     color: #ff8181;
- }.stringColor{
-      color: #b0ff81;
-  }
-
-/*===============Request=============*/
-  .rowWithPre{
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      justify-content: space-between;
-  }
-.rowWithPre .preContainer{
-    width: 46%;
-    height: 100%;
+.intColor, .booleanColor, .stringColor, .urlColor, .labelColor {
+    font-weight: 800;
 }
 
-.rowWithPre .preContainer .span{
+.intColor {
+    color: #8181ff;
+}
+
+.booleanColor {
+    color: #ff8181;
+}
+
+.stringColor {
+    color: #399d00;
+}
+
+.urlColor {
+    color: #a2ff6b;
+}.notnullColor {
+     color: aliceblue;
+}
+ .labelColor {
+     color: #95d7f9;
+ }
+
+/*===============Request=============*/
+.white p, .bleu p{
+    width: 50%;
+    text-align: center;
+}
+.description{
+    margin-block: 60px;
+}
+.rowWithPre {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.rowWithPre .preContainer {
+    width: 46%;
+}
+
+.rowWithPre .preContainer .span {
     height: 10%;
 }
 
-pre .json{
+pre .json {
     position: absolute;
 
     font-size: 15px;
@@ -87,16 +142,18 @@ pre .json{
     color: #756c6c;
     text-shadow: #1a1a1a 0px 0px 10px;
 }
+
 pre .json {
 }
+
 pre {
     background: #393939;
     border: #575757 1px solid;
-    padding: 10px;
+    padding: 25px;
+    box-sizing: border-box;
     border-radius: 4px;
     width: 100%;
-    height: 90%;
-    box-sizing: border-box;
+    height: 79%;
     color: antiquewhite;
     position: relative;
     text-shadow: none;
@@ -105,10 +162,11 @@ pre {
     white-space: pre-wrap;
 
 }
-kbd{
+
+kbd {
     background: #dbd6ff;
     padding: 7px 14px;
     box-sizing: border-box;
     border-radius: 5px;
-    margin-inline: 25px;
+    margin-inline: 10px;
 }

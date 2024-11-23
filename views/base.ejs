@@ -6,28 +6,84 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="scrollToTop" onclick="scrollToTop()">
+    <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="41" height="41" rx="20.5" stroke="black" style="stroke:black;stroke-opacity:1;"
+              stroke-width="2"/>
+        <path d="M12.5954 17.8629H19.7621V33.8445L23.3633 33.8983V17.8629H30.5121L21.5538 8.90454L12.5954 17.8629Z"
+              fill="black" style="fill:black;fill-opacity:1;"/>
+    </svg>
+</div>
+<details class="routesNavigation">
+    <summary>Routes</summary>
+    <% routes.forEach(function(route, index){
+
+
+    %>
+    <span onclick="scrollToDiv(<%- index %>)"><%- route.title %>
+        %>
+    </span>
+    <% }); %>
+</details>
+
+
 <div class="bleu">
     <h1 class="caramel">Bookshelf API</h1>
-    pPlease note that in JSON responses, when you see [], it indicates that there can be multiple instances or even the same content within the brackets.
+    Please note that in JSON responses, when you see [ ], it indicates that there can be multiple instances or even the
+    same content within the brackets.
 </div>
-<% routes.forEach(function(route,index){ %>
-    <div class="<%= index % 2 !== 0 ? 'bleu' : 'white' %>">
-        <%- include('partials/routeTemplate', { route: route }); %>
-    </div>
+
+<% routes.forEach(function(route, index){
+%>
+<div class="<%= index % 2 !== 0 ? 'bleu' : 'white' %> div<%= index %>">
+    <%- include('partials/routeTemplate', { route: route }); %>
+</div>
 <% }); %>
 
+<script>
+
+    function scrollToTop() {
+        window.scrollTo(0, 0);
+    }
 
 
+    function scrollToDiv(route) {
+        const element = document.querySelector(`.div${route}`);
+        console.log(element)
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
 
-<script defer src="/js/script.js">
+        }
+    }
+
 
     let allPre = document.querySelectorAll("pre")
     allPre.forEach((pre) => {
-        let res = pre.innerHTML.replaceAll(`"int"`, "<span class='intColor'>int</span>")
-        res = res.replaceAll(`"boolean"`, "<span class='booleanColor'>boolean</span>")
-        res = res.replaceAll(`"string"`, "<span class='stringColor'>string</span>")
+
+        let types = [
+            ["int", "intColor"],
+            ["boolean", "booleanColor"],
+            ["string", "stringColor"],
+            ["url", "urlColor"],
+            ["NOT NULL", "notnullColor"],
+        ]
+
+        let res = pre.innerHTML
+        types.forEach((type) => {
+            res = res.replaceAll(type[0], `<span class='${type[1]}'>${type[0]}</span>`)
+        })
 
 
+        const labelJson = ['_id', 'name', 'author', 'author', 'ine', "publishedYear", "description",
+            "message", "title", "name", "bookshelves", "image", "searchTerm"
+
+        ]
+        labelJson.forEach((label) => {
+            res = res.replaceAll(label, `<span class='labelColor'>${label}</span>`)
+        })
 
         pre.innerHTML = res
     })

@@ -6,9 +6,9 @@ router.get('/bookshelves',getBookshelves)
 router.get('/bookshelf/get/:id',getBookshelf)
 router.post('/bookshelf/new',newBookshelf)
 router.put('/bookshelf/edit/:id',editBookshelf)
-router.delete('/bookshelves/remove/:id',removeBookshelf)
+router.delete('/bookshelf/remove/:id',removeBookshelf)
 router.patch('/bookshelf/:bookshelfId/add/book/:bookId',addBookToBookshelf)
-router.patch('/bookshelves/sort/:type',sortBookshelf)
+router.get('/bookshelves/sort/:type',sortBookshelf)
 
 
 module.exports = router;
