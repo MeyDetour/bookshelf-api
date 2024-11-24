@@ -8,7 +8,5 @@ const data = [
         'bodyJson': null,
         "responseJson": null
     }
-
-
 ]
 module.exports = data;
