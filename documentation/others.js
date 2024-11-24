@@ -1,6 +1,6 @@
 const data = [
     {
-        'title': 'Images',
+        'title': 'Get images',
         'methode': 'GET',
         'url': '/uploads/...',
         'description': 'For each image, you must provide a token to authenticate the request.',
