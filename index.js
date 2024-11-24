@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000
+const port = 3005
 const cors = require('cors');
 const corsOptions = {
     origin: '*',  // Allows requests from all domains. Specify actual domain in production for security.
