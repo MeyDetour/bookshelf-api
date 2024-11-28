@@ -78,6 +78,16 @@ async function getBooks(req, res) {
         return res.sendStatus(400); // Token invalide ou expiré
     }
 }
+async function getBook(req, res) {
+    try {
+        const {id} = req.params
+        const book = await Book.findById(id)
+        if (!book) return res.status(404).send('Book not found.');
+        res.status(200).json(book);
+    } catch (err) {
+        return res.sendStatus(400); // Token invalide ou expiré
+    }
+}
 
 async function newBook(req, res) {
     try {
@@ -216,4 +226,4 @@ async function sortBooks(req, res) {
 
 //recherche de ligne
 //Scna de qrcode
-module.exports = {getBooks, newBook, uploadImageToBook, editBook, removeBook, removeImage, searchBook,sortBooks};
+module.exports = {getBooks, newBook, uploadImageToBook, editBook,getBook ,removeBook, removeImage, searchBook,sortBooks};

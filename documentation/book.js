@@ -45,6 +45,28 @@ const data = [
             "description": "string (NULL)",
             "title": "string (NOT NULL)"
         }]
+    },{
+        'title': 'Get one book',
+        'methode': 'GET',
+        'url': '/api/book/get/{id}',
+        'description': 'This request retrieves one book in the system. One book can be in multiple bookshelves, and each bookshelf can contain many books.',
+        'needToken': true,
+        'bodyJson': {}
+        ,
+        "responseJson":  {
+            "bookshelves": [
+                {
+                    "_id": "string (AI) (NOT NULL)",
+                    "name": "string (NOT NULL)"
+                }
+            ],
+            "_id": "string (AI) (NOT NULL)",
+            "author": "string (NULL)",
+            "ine": "string (NULL)",
+            "image": "url (NULL)",
+            "description": "string (NULL)",
+            "title": "string (NOT NULL)"
+        }
     }, {
         'title': 'Create Book',
         'methode': 'POST',

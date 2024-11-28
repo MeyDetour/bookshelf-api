@@ -47,8 +47,8 @@ async function login(req, res) {
             let jwtToSend = jwt.sign({id: user._id, email: user.email}, process.env.TOKEN_SECRET, {expiresIn: '1800s'})
             return res.status(201).json({token: jwtToSend});
 
-        }else{
-             return res.status(400).json({message: "Invalid password"});
+        } else {
+            return res.status(400).json({message: "Invalid password"});
 
         }
 
@@ -60,4 +60,38 @@ async function login(req, res) {
 
 }
 
-module.exports = {registerUser, login}
+async function deleteUser(req, res) {
+    try {
+        const userId = req.user.id; // Assume this comes from authentication middleware
+
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        await user.deleteOne();
+        console.log(user)
+        return res.status(200).json({message: 'User deleted successfully'});
+
+
+    } catch (e) {
+        return res.status(500).json({'message': 'Error during deleting of user .' + e});
+
+    }
+
+}
+async function getCurrentUser(req, res) {
+    try {
+
+
+        return res.status(200).json(req.user );
+
+
+    } catch (e) {
+        return res.status(500).json({'message': 'Error during deleting of user .' + e});
+
+    }
+
+}
+
+module.exports = {registerUser, login, deleteUser,getCurrentUser}

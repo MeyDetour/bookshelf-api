@@ -17,7 +17,7 @@ const data = [
         'title': 'Login',
         'methode': 'POST',
         'url': '/login',
-        'description': 'This request allows you to create a book. The created book is not directly linked to a bookshelf; use the "add book to bookshelf" request to associate it with a specific bookshelf.',
+        'description': 'This request allows a user to login by providing an email and a password. ',
         'needToken': true,
         'bodyJson': {
             "email": "string (NOT NULL) (UNIQUE)",
@@ -26,7 +26,29 @@ const data = [
         "responseJson": {
             "token": "string (NOT NULL)",
         }
-    },
+    }, {
+        'title': 'Delete user',
+        'methode': 'DELETE',
+        'url': '/api/delete',
+        'description': 'This request delete the current user by providing token ',
+        'needToken': true,
+        'bodyJson':null,
+        "responseJson": null
+    }, {
+        'title': 'Get current user',
+        'methode': 'GET',
+        'url': '/api/get/user',
+        'description': 'This request get the current user by providing an email and a password. ',
+        'needToken': true,
+        'bodyJson': {
+            "email": "string (NOT NULL) (UNIQUE)",
+            "id": "string (AI) (NOT NULL)",
+
+        },
+        "responseJson": {
+            "token": "string (NOT NULL)",
+        }
+    }
 
 
 ]
