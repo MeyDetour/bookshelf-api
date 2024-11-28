@@ -30,7 +30,23 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter, // Apply the file filter
-    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5 MB
+    limits: {fileSize: 5 * 1024 * 1024} // Limit file size to 5 MB
+});
+
+
+const fileFilterPdf = (req, file, cb) => {
+    // Allowed file types
+    const allowedMimeTypes = ['application/pdf'];
+
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true); // Accept the file
+    } else {
+        cb(new Error('Invalid file type. Only PDF are allowed.'));
+    }
+};
+const uploadpdf = multer({
+    storage: storage,
+    fileFilter: fileFilterPdf, // Apply the file filter
 });
 
 
@@ -49,8 +65,8 @@ async function uploadImageToBook(req, res) {
             if (!book) return res.status(404).send('Book not found.');
 
             if (book.image) {
-                let removal = removeImageFromServer(book)
-                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+                let removal = await removeImageFromServer(book)
+                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
 
             }
 
@@ -65,11 +81,42 @@ async function uploadImageToBook(req, res) {
     }
 }
 
+async function uploadPdfToBook(req, res) {
+    try {
+
+        uploadpdf.single('pdf')(req, res, async (err) => {
+            if (err) {
+                return res.status(500).send('Error uploading file.' + err);
+            }
+            if (!req.file) {
+                return res.status(400).send('No file uploaded.');
+            }
+            const {id} = req.params
+            const book = await Book.findById(id)
+            if (!book) return res.status(404).send('Book not found.');
+
+            if (book.pdf) {
+                let removal =  await removePdfFromServer(book)
+                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
+
+            }
+
+
+            book.pdf = `/uploads/${encodeURIComponent(req.file.filename)}`;
+            await book.save();
+
+         return    res.status(201).json({"message": "ok"});
+        });
+    } catch (e) {
+        res.status(500).send('Error upload pdf to book. :' + e);
+    }
+}
+
 async function getBooks(req, res) {
     try {
 
         console.log("get all books")
-        let books = await Book.find({}).select('title image description publishedYear author ine ').populate({
+        let books = await Book.find({}).select('title image pdf description publishedYear author ine ').populate({
             path: 'bookshelves',
             select: "name"
         })
@@ -78,6 +125,7 @@ async function getBooks(req, res) {
         return res.sendStatus(400); // Token invalide ou expiré
     }
 }
+
 async function getBook(req, res) {
     try {
         const {id} = req.params
@@ -140,8 +188,29 @@ async function removeImage(req, res) {
         if (!book) return res.status(404).send('Book not found.');
         if (book.image == null) return res.status(200).json({"message": "ok"});
 
-        let removal = removeImageFromServer(book)
-        if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+        let removal = await removeImageFromServer(book)
+        if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
+
+
+        return res.status(200).json({"message": "ok"});
+
+
+    } catch (e) {
+        res.status(500).send('Error remove books image. :' + e);
+    }
+
+}
+async function removePdf(req, res) {
+    try {
+
+        const {id} = req.params
+        const book = await Book.findById(id)
+
+        if (!book) return res.status(404).send('Book not found.');
+        if (book.pdf == null) return res.status(200).json({"message": "ok"});
+
+        let removal = await removePdfFromServer(book)
+        if (removal != null) return res.status(500).send("Error during removal of book's pdf on server. :" + removal);
 
 
         return res.status(200).json({"message": "ok"});
@@ -159,8 +228,11 @@ async function removeBook(req, res) {
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
         if (book.image) {
-            let removal = removeImageFromServer(book)
+            let removal =  await removeImageFromServer(book)
             if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
+        }  if (book.pdf) {
+            let removal = await removePdfFromServer(book)
+            if (removal != null) return res.status(500).send("Error during removal of book's pdgf on server. :" + e);
         }
 
         await book.deleteOne()
@@ -182,25 +254,36 @@ async function searchBook(req, res) {
     }
 }
 
-function removeImageFromServer(book) {
-    const imagePath = path.join(__dirname + '/..' + book.image);
-
-    fs.unlink(imagePath, async (err) => {
-        if (err) {
-            return err;
-        }
-
-        book.image = null;
-        await book.save();
-        return null;
-    });
-    return null
+async function removeImageFromServer(book) {
+    const imagePath = path.join(__dirname, '..', book.image);
+    await removeFile(imagePath);
+    book.image = null;
+    await book.save();
 }
 
-
+async function removePdfFromServer(book) {
+    const pdfPath = path.join(__dirname, '..', book.pdf);
+    await removeFile(pdfPath);
+    book.pdf = null;
+    await book.save();
+}
+async function removeFile(filePath) {
+    try {
+        await fs.promises.access(filePath); // Vérifie si le fichier existe
+        await fs.promises.unlink(filePath); // Supprime le fichier
+        console.log(`File at ${filePath} deleted successfully`);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            console.log(`File at ${filePath} does not exist.`);
+        } else {
+            console.error(`Error deleting file at ${filePath}:`, err);
+        }
+    }
+}
 
 async function sortBooks(req, res) {
-    try{   const {type} = req.params;
+    try {
+        const {type} = req.params;
         let books = [];
         if (!type) return res.status(404).send('type not found.');
         switch (type) {
@@ -226,4 +309,16 @@ async function sortBooks(req, res) {
 
 //recherche de ligne
 //Scna de qrcode
-module.exports = {getBooks, newBook, uploadImageToBook, editBook,getBook ,removeBook, removeImage, searchBook,sortBooks};
+module.exports = {
+    getBooks,
+    newBook,
+    uploadImageToBook,
+    editBook,
+    getBook,
+    removeBook,
+    removeImage,
+    searchBook,
+    sortBooks,
+    uploadPdfToBook,
+    removePdf
+};

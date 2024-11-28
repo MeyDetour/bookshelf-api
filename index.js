@@ -49,7 +49,7 @@ app.use(
     jwt({
         secret: process.env.TOKEN_SECRET,
         algorithms: ["HS256"],
-    }).unless({ path: ["/login", "/register","/public","/doc",'/send-email'] }),
+    }).unless({ path: ["/login", "/register","/public","/uploads","/doc",'/send-email'] }),
 );
 app.use('/api', async (req, res, next) => {
     const hasValidToken = await verifyToken(req);

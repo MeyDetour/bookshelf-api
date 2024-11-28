@@ -20,6 +20,7 @@ const data = [
             "author": "string (NULL)",
             "ine": "string (NULL)",
             "image": "url (NULL)",
+            "pdf": "url (NULL)",
             "description": "string (NULL)",
             "title": "string (NOT NULL)"
         }]
@@ -42,6 +43,7 @@ const data = [
             "author": "string (NULL)",
             "ine": "string (NULL)",
             "image": "url (NULL)",
+            "pdf": "url (NULL)",
             "description": "string (NULL)",
             "title": "string (NOT NULL)"
         }]
@@ -64,6 +66,7 @@ const data = [
             "author": "string (NULL)",
             "ine": "string (NULL)",
             "image": "url (NULL)",
+            "pdf": "url (NULL)",
             "description": "string (NULL)",
             "title": "string (NOT NULL)"
         }
@@ -117,10 +120,26 @@ const data = [
         'bodyJson': null,
         "responseJson": null
     },{
+        'title': 'Upload pdf to book',
+        'methode': 'PATCH',
+        'url': '/api/upload/pdf/to/book/:id',
+        'description': 'You can add an pdf to a book by sending a PATCH request with FormData. The FormData should include the pdf field, with the pdf file as its value. The id of the book must also be provided in the request body. The response will return OK once the image has been successfully added to the book.',
+        'needToken': true,
+        'bodyJson': null,
+        "responseJson": null
+    },{
         'title': 'Remove image of book',
         'methode': 'DELETE',
         'url': '/api/book/remove/image/:id',
         'description': 'You can remove the image associated with a book by specifying its id. This will clear the image field for the book. The response will return OK once the image has been successfully removed.',
+        'needToken': true,
+        'bodyJson': null,
+        "responseJson": null
+    },{
+        'title': 'Remove pdf of book',
+        'methode': 'DELETE',
+        'url': '/api/book/remove/pdf/:id',
+        'description': 'You can remove the pdf associated with a book by specifying its id. This will clear the image field for the book. The response will return OK once the image has been successfully removed.',
         'needToken': true,
         'bodyJson': null,
         "responseJson": null
