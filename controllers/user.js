@@ -10,11 +10,11 @@ async function registerUser(req, res) {
     try {
         const {email, password} = req.body
         if (!email || !password) {
-            return res.status(400).json('Please enter email and password')
+            return res.status(400).json({'message':'Please enter email and password'})
         }
         let user = await User.findOne({email: email});
         if (user) {
-            return res.status(400).json('Email already taken')
+            return res.status(400).json({"message":'Email already taken'})
         }
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -33,13 +33,14 @@ async function registerUser(req, res) {
 
 async function login(req, res) {
     try {
+        console.log("request")
         const {email, password} = req.body
         if (!email || !password) {
-            return res.status(400).json('Please enter email and password')
+            return res.status(400).json({"message":'Please enter email and password'})
         }
         let user = await User.findOne({email: email});
         if (!user) {
-            return res.status(404).json('Not account found')
+            return res.status(404).json({"message":'Not account found'})
         }
         const isMatch = await bcrypt.compare(password, user.password);
 
@@ -48,8 +49,7 @@ async function login(req, res) {
             return res.status(201).json({token: jwtToSend});
 
         } else {
-            return res.status(400).json({message: "Invalid password"});
-
+            return res.status(400).json({"message": "Invalid password"});
         }
 
 

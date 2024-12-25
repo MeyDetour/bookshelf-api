@@ -5,6 +5,8 @@ body {
     padding: 0;
     overflow-x: hidden;
 
+    font-size: 16px;
+
     font-family: "Nunito", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -31,7 +33,7 @@ h2 {
 }
 
 .bleu, .white {
-    min-height: 75vh;
+    min-height: 45vh;
     height: fit-content;
     width: 100%;
     display: flex;
@@ -58,13 +60,14 @@ h2 {
     align-items: center;
     justify-content: center;
 }
-.scrollToTop{
+
+.scrollToTop {
     position: fixed;
     bottom: 30px;
     right: 50px;
 }
 
-.routesNavigation{
+.routesNavigation {
     position: fixed;
     top: 0px;
     right: 74px;
@@ -77,14 +80,16 @@ h2 {
     cursor: pointer;
 }
 
-.routesNavigation span{
+.routesNavigation span {
     cursor: pointer;
 
     margin-block: 4px;
 }
-.routesNavigation span:hover{
+
+.routesNavigation span:hover {
     color: #676767;
 }
+
 /*===============COLOR CLASS=============*/
 .intColor, .booleanColor, .stringColor, .urlColor, .labelColor {
     font-weight: 800;
@@ -104,21 +109,26 @@ h2 {
 
 .urlColor {
     color: #a2ff6b;
-}.notnullColor {
-     color: aliceblue;
 }
- .labelColor {
-     color: #95d7f9;
- }
+
+.notnullColor {
+    color: aliceblue;
+}
+
+.labelColor {
+    color: #95d7f9;
+}
 
 /*===============Request=============*/
-.white p, .bleu p{
+.white p, .bleu p {
     width: 50%;
     text-align: center;
 }
-.description{
+
+.description {
     margin-block: 60px;
 }
+
 .rowWithPre {
     display: flex;
     flex-direction: row;
@@ -172,4 +182,32 @@ kbd {
     box-sizing: border-box;
     border-radius: 5px;
     margin-inline: 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+    .bleu, .white {
+        padding-inline: 5%;
+    }
+
+    .white p, .bleu p {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .white p, .bleu p {
+        width: 100%;
+    }
+
+    .rowWithPre {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .rowWithPre .preContainer {
+        width: 100%;
+    }
+    .bleu,.white{
+        min-height: fit-content;
+    }
 }
