@@ -172,10 +172,13 @@ justify-content: center;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
+    font-size: 16px;
 }
 
 .rowWithPre .preContainer {
     width: 46%;
+
+
 }
 
 .rowWithPre .preContainer .span {
@@ -209,6 +212,7 @@ pre {
     position: relative;
     text-shadow: none;
 
+    font-size: 13px;
     word-wrap: break-word;
     white-space: pre-wrap;
 
