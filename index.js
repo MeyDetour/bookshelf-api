@@ -33,7 +33,7 @@ mongoose.connect(mongodUri)
 
 //for body data
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -43,7 +43,6 @@ console.log(require('crypto').randomBytes(64).toString('hex'))
 */
 
 
-app.use(bodyparser.urlencoded({ extended: true }));
 
 //make all routes protected
 app.use(
