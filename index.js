@@ -43,7 +43,7 @@ console.log(require('crypto').randomBytes(64).toString('hex'))
 */
 
 
-app.use(bodyParser.urlencoded({ extended: true }));  
+app.use(bodyparser.urlencoded({ extended: true }));
 
 //make all routes protected
 app.use(
