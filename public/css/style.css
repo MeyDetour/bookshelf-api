@@ -65,6 +65,7 @@ h2 {
     position: fixed;
     bottom: 30px;
     right: 50px;
+    z-index: 20;
 }
 
 .routesNavigation {
@@ -78,6 +79,8 @@ h2 {
 
     display: flex;
     cursor: pointer;
+
+    z-index: 99;
 }
 
 .routesNavigation span {
@@ -90,6 +93,41 @@ h2 {
     color: #676767;
 }
 
+/*===============NAVBAR BURGER AND OVERLAY=============*/
+.burgerNavigation {
+    display: none;
+    z-index: 99;
+}
+.navigationOverlay {
+display: none;
+
+    flex-direction: column;
+    align-items: center;
+justify-content: center;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: white;
+    z-index: 50;
+    gap: 30px;
+}
+.navigationOverlay> span{
+    font-weight: bold;
+}
+.overlayRoutes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    height: 49%;   width: 100%;
+    overflow-y: scroll;
+}
 /*===============COLOR CLASS=============*/
 .intColor, .booleanColor, .stringColor, .urlColor, .labelColor {
     font-weight: 800;
@@ -207,7 +245,22 @@ kbd {
     .rowWithPre .preContainer {
         width: 100%;
     }
-    .bleu,.white{
+
+    .bleu, .white {
         min-height: fit-content;
     }
+}
+
+@media only screen and (max-width: 630px) {
+    .routesNavigation {
+        display: none;
+    }
+
+    .burgerNavigation {
+        display: flex;
+        position: absolute;
+        top: 50px;
+        right: 50px;
+    }
+
 }

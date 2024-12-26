@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <div class="scrollToTop" onclick="scrollToTop()">
@@ -14,19 +15,34 @@
               fill="black" style="fill:black;fill-opacity:1;"/>
     </svg>
 </div>
+<!--ROUTES LIST -->
 <details class="routesNavigation">
     <summary>Routes</summary>
-    <% routes.forEach(function(route, index){
-
-
-    %>
-    <span onclick="scrollToDiv(<%- index %>)"><%- route.title %>
-        %>
-    </span>
+    <% routes.forEach(function(route, index){ %>
+        <span onclick="scrollToDiv(<%- index %>)"><%- route.title %></span>
     <% }); %>
 </details>
 
+<!--RESPONSIV 630px -->
+<div class="navigationOverlay">
+    <span>Scroll to see routes</span>
+    <div class="overlayRoutes">
+        <% routes.forEach(function(route, index){ %>
+            <span onclick="scrollToDiv(<%- index %>)"><%- route.title %></span>
+        <% }); %>
+    </div>
 
+</div>
+
+<div class="burgerNavigation" onclick="burgerNavigation()">
+    <svg width="20" height="15" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect y="0.5" width="20" height="2" fill="#0D071B"/>
+        <rect x="10" y="6.5" width="10" height="2" fill="#0D071B"/>
+        <rect y="12.5" width="20" height="2" fill="#0D071B"/>
+    </svg>
+</div>
+
+<!-- CONTENT -->
 <div class="bleu">
     <h1 class="caramel">Bookshelf API</h1>
     Please note that in JSON responses, when you see [ ], it indicates that there can be multiple instances or even the
@@ -35,12 +51,25 @@
 
 <% routes.forEach(function(route, index){
 %>
-<div class="<%= index % 2 !== 0 ? 'bleu' : 'white' %> div<%= index %>">
-    <%- include('partials/routeTemplate', { route: route }); %>
-</div>
+    <div class="<%= index % 2 !== 0 ? 'bleu' : 'white' %> div<%= index %>">
+        <%- include('partials/routeTemplate', { route: route }); %>
+    </div>
 <% }); %>
 
 <script>
+
+    function burgerNavigation(){
+        let overlay = document.querySelector('.navigationOverlay');
+        let body = document.querySelector('body');
+        if (overlay.style.display == 'flex') {
+            overlay.style.display = 'none';
+            body.style.overflow = 'auto';
+        }else{
+            overlay.style.display = 'flex';
+            body.style.overflow = 'hidden';
+        }
+
+    }
 
     function scrollToTop() {
         window.scrollTo(0, 0);
@@ -48,6 +77,14 @@
 
 
     function scrollToDiv(route) {
+
+        let overlay = document.querySelector('.navigationOverlay');
+        let body = document.querySelector('body');
+        if (overlay.style.display === 'flex') {
+            overlay.style.display = 'none';
+            body.style.overflow = 'auto';
+        }
+
         const element = document.querySelector(`.div${route}`);
         console.log(element)
         if (element) {
