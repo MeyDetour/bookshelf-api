@@ -19,7 +19,6 @@ const userRouter = require('./routes/user.js');
 const docRouter = require('./routes/documentation.js');
 
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
 const {verifyToken} = require("./controllers/tokenVerify");
 const mongodUri = 'mongodb://localhost:27017/bookshelf';
@@ -33,8 +32,8 @@ mongoose.connect(mongodUri)
 })
 
 //for body data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
