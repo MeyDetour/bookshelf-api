@@ -68,20 +68,6 @@ h2 {
     z-index: 20;
 }
 
-.routesNavigation {
-    position: fixed;
-    top: 0px;
-    right: 74px;
-    width: 11%;
-    background: white;
-    padding: 5px 28px;
-    box-shadow: 0px 0px 13px 1px #0000001f;
-
-    display: flex;
-    cursor: pointer;
-
-    z-index: 99;
-}
 
 .routesNavigation span {
     cursor: pointer;
@@ -95,8 +81,12 @@ h2 {
 
 /*===============NAVBAR BURGER AND OVERLAY=============*/
 .burgerNavigation {
-    display: none;
     z-index: 99;
+
+    display: flex;
+    position: absolute;
+    top: 50px;
+    right: 50px;
 }
 .navigationOverlay {
 display: none;
@@ -213,8 +203,8 @@ pre {
     text-shadow: none;
 
     font-size: 13px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    overflow-x: auto;
+    overflow-y: hidden;
 
 }
 
@@ -260,16 +250,8 @@ kbd {
 }
 
 @media only screen and (max-width: 630px) {
-    .routesNavigation {
-        display: none;
-    }
 
-    .burgerNavigation {
-        display: flex;
-        position: absolute;
-        top: 50px;
-        right: 50px;
-    }
+
     h1 {
         font-size: 58px;}
     H2{
