@@ -119,6 +119,9 @@ justify-content: center;
     width: 28%;
     overflow-y: scroll;
 }
+.overlayRoutes > span{
+    cursor: pointer;
+}
 /*===============COLOR CLASS=============*/
 .intColor, .booleanColor, .stringColor, .urlColor, .labelColor {
     font-weight: 800;
