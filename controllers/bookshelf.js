@@ -24,7 +24,7 @@ async function getBookshelf(req, res) {
             return res.status(404).send('No bookshelf found.');
         }
         if ( bookshelf.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's no your bookshelf"});
         }
         return res.status(200).json(bookshelf);
 
@@ -83,7 +83,7 @@ async function removeBookshelf(req, res) {
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if ( bookshelf.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's no your bookshelf"});
         }
         const booksAssociated = await Book.find({bookshelf: id})
         if (booksAssociated.length !== 0) return res.status(400).send('Bookshelf has many books');
@@ -113,12 +113,12 @@ async function addBookToBookshelf(req, res) {
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if ( bookshelf.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's no your bookshelf"});
         }
         const book = await Book.findById(bookId)
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
         if (!book.bookshelves.includes(bookshelfId)) {
             bookshelf.books.push(bookId)

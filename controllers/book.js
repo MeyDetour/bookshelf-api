@@ -64,7 +64,7 @@ async function uploadImageToBook(req, res) {
             const book = await Book.findById(id)
             if (!book) return res.status(404).send('Book not found.');
             if ( book.author !== req.user.id){
-                return res.status(401).json({"message": "It's no your book"});
+                return res.status(403).json({"message": "It's not your book"});
             }
             if (book.image) {
                 let removal = await removeImageFromServer(book)
@@ -97,7 +97,7 @@ async function uploadPdfToBook(req, res) {
             const book = await Book.findById(id)
             if (!book) return res.status(404).send('Book not found.');
             if ( book.author !== req.user.id){
-                return res.status(401).json({"message": "It's no your book"});
+                return res.status(403).json({"message": "It's nott your book"});
             }
             if (book.pdf) {
                 let removal =  await removePdfFromServer(book)
@@ -136,7 +136,7 @@ async function getBook(req, res) {
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
        return  res.status(200).json(book);
     } catch (err) {
@@ -171,7 +171,7 @@ async function editBook(req, res) {
 
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
         if (title) {
             title = String(title).charAt(0).toUpperCase() + String(title).slice(1)
@@ -198,7 +198,7 @@ async function removeImage(req, res) {
 
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
         if (book.image == null) return res.status(200).json({"message": "ok"});
 
@@ -222,7 +222,7 @@ async function removePdf(req, res) {
 
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
         if (book.pdf == null) return res.status(200).json({"message": "ok"});
 
@@ -245,7 +245,7 @@ async function removeBook(req, res) {
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
         if ( book.author !== req.user.id){
-            return res.status(401).json({"message": "It's no your book"});
+            return res.status(403).json({"message": "It's not your book"});
         }
         if (book.image) {
             let removal =  await removeImageFromServer(book)
