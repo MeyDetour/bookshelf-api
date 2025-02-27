@@ -82,10 +82,7 @@ async function deleteUser(req, res) {
 }
 async function getCurrentUser(req, res) {
     try {
-
-
         return res.status(200).json(req.user );
-
 
     } catch (e) {
         return res.status(500).json({'message': 'Error during deleting of user .' + e});

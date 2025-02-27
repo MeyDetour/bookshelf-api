@@ -63,7 +63,9 @@ async function uploadImageToBook(req, res) {
             const {id} = req.params
             const book = await Book.findById(id)
             if (!book) return res.status(404).send('Book not found.');
-
+            if ( book.author !== req.user.id){
+                return res.status(401).json({"message": "It's no your book"});
+            }
             if (book.image) {
                 let removal = await removeImageFromServer(book)
                 if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
@@ -74,7 +76,7 @@ async function uploadImageToBook(req, res) {
             book.image = `/uploads/${encodeURIComponent(req.file.filename)}`;
             await book.save();
 
-            res.status(201).json({"message": "ok"});
+           return  res.status(201).json({"message": "ok"});
         });
     } catch (e) {
         res.status(500).send('Error upload image to book. :' + e);
@@ -94,7 +96,9 @@ async function uploadPdfToBook(req, res) {
             const {id} = req.params
             const book = await Book.findById(id)
             if (!book) return res.status(404).send('Book not found.');
-
+            if ( book.author !== req.user.id){
+                return res.status(401).json({"message": "It's no your book"});
+            }
             if (book.pdf) {
                 let removal =  await removePdfFromServer(book)
                 if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
@@ -108,7 +112,7 @@ async function uploadPdfToBook(req, res) {
          return    res.status(201).json({"message": "ok"});
         });
     } catch (e) {
-        res.status(500).send('Error upload pdf to book. :' + e);
+    return     res.status(500).send('Error upload pdf to book. :' + e);
     }
 }
 
@@ -116,7 +120,7 @@ async function getBooks(req, res) {
     try {
 
         console.log("get all books")
-        let books = await Book.find({}).select('title image pdf description publishedYear author ine ').populate({
+        let books = await Book.find({author:req.user.id}).select('title image pdf description publishedYear author ine ').populate({
             path: 'bookshelves',
             select: "name"
         })
@@ -131,7 +135,10 @@ async function getBook(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
-        res.status(200).json(book);
+        if ( book.author !== req.user.id){
+            return res.status(401).json({"message": "It's no your book"});
+        }
+       return  res.status(200).json(book);
     } catch (err) {
         return res.sendStatus(400); // Token invalide ou expiré
     }
@@ -144,6 +151,8 @@ async function newBook(req, res) {
 
         if (!data.title) return res.status(400).send('Please enter name');
         data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
+
+        data.author = req.user.id;
         let book = await Book.create({...data})
 
         res.status(201).json({"message": "ok"});
@@ -161,7 +170,9 @@ async function editBook(req, res) {
         let {title, description, publishedYear, ine, author} = req.body
 
         if (!book) return res.status(404).send('Book not found.');
-
+        if ( book.author !== req.user.id){
+            return res.status(401).json({"message": "It's no your book"});
+        }
         if (title) {
             title = String(title).charAt(0).toUpperCase() + String(title).slice(1)
             book.title = title
@@ -186,6 +197,9 @@ async function removeImage(req, res) {
         const book = await Book.findById(id)
 
         if (!book) return res.status(404).send('Book not found.');
+        if ( book.author !== req.user.id){
+            return res.status(401).json({"message": "It's no your book"});
+        }
         if (book.image == null) return res.status(200).json({"message": "ok"});
 
         let removal = await removeImageFromServer(book)
@@ -207,6 +221,9 @@ async function removePdf(req, res) {
         const book = await Book.findById(id)
 
         if (!book) return res.status(404).send('Book not found.');
+        if ( book.author !== req.user.id){
+            return res.status(401).json({"message": "It's no your book"});
+        }
         if (book.pdf == null) return res.status(200).json({"message": "ok"});
 
         let removal = await removePdfFromServer(book)
@@ -227,6 +244,9 @@ async function removeBook(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
         if (!book) return res.status(404).send('Book not found.');
+        if ( book.author !== req.user.id){
+            return res.status(401).json({"message": "It's no your book"});
+        }
         if (book.image) {
             let removal =  await removeImageFromServer(book)
             if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + e);
@@ -247,7 +267,7 @@ async function searchBook(req, res) {
     try {
         const {searchTerm} = req.body;
         //https://www.geeksforgeeks.org/how-to-do-a-full-text-search-in-mongodb-using-mongoose/
-        const books = await Book.find({$text: {$search: searchTerm}})
+        const books = await Book.find({$text: {$search: searchTerm},author:req.user.id})
         res.status(200).json(books);
     } catch (e) {
         res.status(500).send('Error remove book. :' + e);
@@ -288,14 +308,14 @@ async function sortBooks(req, res) {
         if (!type) return res.status(404).send('type not found.');
         switch (type) {
             case 'title-asc':
-                books = await Book.find({}).sort({title: 1})
+                books = await Book.find({author:req.user.id}).sort({title: 1})
                 break;
             case 'title-dsc':
-                books = await Book.find({}).sort({title: -1})
+                books = await Book.find({author:req.user.id}).sort({title: -1})
                 break;
 
             default :
-                books = await Book.find({})
+                books = await Book.find({author:req.user.id})
 
         }
 

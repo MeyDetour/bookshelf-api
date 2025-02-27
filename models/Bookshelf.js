@@ -4,12 +4,17 @@ const Bookshelf = new mongoose.Schema({
     name: {
         type: mongoose.SchemaTypes.String,
         required: true
-    }, books: [
+    },
+    books: [
         {
             type: mongoose.Types.ObjectId,
             ref: 'Book',
         }
     ],
+    author: {
+        type: mongoose.SchemaTypes.String,
+        get: value => value ? value : null,
+    }
 
 })
 

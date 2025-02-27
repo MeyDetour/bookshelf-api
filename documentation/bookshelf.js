@@ -97,7 +97,7 @@ const data = [
         ,
         "responseJson": null
     }, {
-        'title': 'Sort bookshelf',
+        'title': 'Sort bookshelves',
         'methode': 'GET',
         'url': '/api/bookshelves/sort/:type',
         'description': "This request returns a list of bookshelves sorted according to the specified criteria. You can choose to sort the bookshelves by name or by the number of books associated with each bookshelf. The sorting can be done in ascending or descending order. \n" +
