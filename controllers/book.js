@@ -119,8 +119,20 @@ async function uploadPdfToBook(req, res) {
 async function getBooks(req, res) {
     try {
 
-        console.log("get all books")
         let books = await Book.find({author:req.user.id}).select('title image pdf description publishedYear author ine ').populate({
+            path: 'bookshelves',
+            select: "name"
+        })
+        res.status(200).json(books);
+    } catch (err) {
+        return res.sendStatus(400); // Token invalide ou expiré
+    }
+}
+
+async function getAllBooks(req, res) {
+    try {
+
+        let books = await Book.find({}).select('title image pdf description publishedYear author ine ').populate({
             path: 'bookshelves',
             select: "name"
         })
@@ -340,5 +352,6 @@ module.exports = {
     searchBook,
     sortBooks,
     uploadPdfToBook,
-    removePdf
+    removePdf,
+    getAllBooks
 };

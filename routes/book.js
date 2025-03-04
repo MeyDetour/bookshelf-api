@@ -1,8 +1,9 @@
 const {Router} = require('express');
-const {getBooks,newBook,uploadImageToBook,uploadPdfToBook,removePdf,editBook,removeImage,removeBook, searchBook,sortBooks, getBook} = require("../controllers/book");
+const {getBooks,newBook,uploadImageToBook,uploadPdfToBook,getAllBooks,removePdf,editBook,removeImage,removeBook, searchBook,sortBooks, getBook} = require("../controllers/book");
 const router = Router();
 
-router.get('/books',  getBooks);
+router.get('/own/books',  getBooks);
+router.get('/books',  getAllBooks);
 router.get('/book/get/:id',  getBook);
 router.get('/books/sort/:type',  sortBooks);
 router.post('/book/new',  newBook)
