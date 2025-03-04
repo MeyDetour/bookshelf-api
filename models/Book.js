@@ -41,9 +41,10 @@ const Book = new mongoose.Schema(
 
         },
         author: {
-            type: mongoose.SchemaTypes.String,
-            get: value => value ? value : null,
-        }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
     },
     {
         toJSON: {getters: true},
