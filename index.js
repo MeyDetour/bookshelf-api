@@ -56,6 +56,7 @@ app.use('/api', async (req, res, next) => {
     if (!hasValidToken) {
         return res.status(403).json({ message: 'Invalid token' });
     }
+    console.log(res.user.id)
     next(); // Si le token est valide, on passe à la route suivante
 });
 
