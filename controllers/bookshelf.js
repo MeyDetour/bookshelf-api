@@ -14,7 +14,7 @@ async function getBookshelf(req, res) {
     try {
         const {id} = req.params;
 
-        const bookshelf = await Bookshelf.findById(id).select('name').select('name').populate({
+        const bookshelf = await Bookshelf.findById(id).select('name').populate({
             path: 'books',
             select: 'title publishedYear description image author ine'
         });
