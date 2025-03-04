@@ -5,7 +5,7 @@ const Book = require("../models/Book");
 async function getBookshelves(req, res) {
     const bookshelves = await Bookshelf.find({author: req.user.id}).select('name').populate({
         path: 'books',
-        select: 'title publishedYear description image author ine'
+        select: 'name author books'
     })
     return res.status(200).json(bookshelves)
 }
