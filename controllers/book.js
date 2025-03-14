@@ -174,6 +174,10 @@ async function newBook(req, res) {
             throw new Error(err);
         });
 
+        if (!book){
+            console.log("no book created")
+            return
+        };
         if (Array.isArray(bookshelves) && bookshelves.length > 0) {
             for (let bookshelfId of bookshelves) {
                 const bookshelf = await Bookshelf.findOne(bookshelfId);
