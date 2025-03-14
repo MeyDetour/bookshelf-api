@@ -40,7 +40,7 @@ async function newBookshelf(req, res) {
         if (!name) return res.status(400).json({'message': 'Please enter name.'});
 
         let bookshelfExist = await Bookshelf.findOne({name})
-        if (bookshelfExist) return res.status(404).send('bookshelf name is already taken.');
+        if (bookshelfExist) return res.status(409).json({message:'bookshelf name is already taken.'});
 
         await Bookshelf.create({name: name, author: req.user.id})
         return res.status(201).json({"message": "ok"});
