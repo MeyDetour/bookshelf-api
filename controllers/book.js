@@ -167,7 +167,7 @@ async function newBook(req, res) {
         data.author = req.user.id;
         let book = await Book.create({...data})
 
-        res.status(201).json({"message": "ok"});
+        res.status(201).json(book);
     } catch (e) {
         res.status(500).send('Error creating book. :' + e);
     }
