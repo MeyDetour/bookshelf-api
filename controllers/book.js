@@ -168,6 +168,18 @@ async function newBook(req, res) {
         console.log(req.user.id)
         data.author = req.user.id;
         console.log("Data to create:", data);
+        if (Array.isArray(book.bookshelves) && book.bookshelves.length > 0) {
+            for (let bookshelfId of book.bookshelves) {
+                const bookshelf = await Bookshelf.findById(bookshelfId);
+                if (bookshelf) {
+                    bookshelf.books.push(data);
+                    await bookshelf.save();
+                } else {
+                    console.warn(`Bookshelf not found: ${bookshelfId}`);
+                }
+            }
+        }
+
         let book = await Book.create({...data}).catch((err) => {
             console.error("MongoDB Error:", err);
             throw new Error(err);
@@ -185,7 +197,7 @@ async function editBook(req, res) {
 
         const {id} = req.params
         const book = await Book.findById(id)
-        let {title, description, publishedYear, ine, author} = req.body
+        let {title, description, publishedYear, ine, author,bookshelves} = req.body
 
         if (!book) return res.status(404).send('Book not found.');
          if (!bookshelf.author.equals(req.user.id)) {
@@ -199,6 +211,18 @@ async function editBook(req, res) {
         if (publishedYear) book.publishedYear = publishedYear
         if (author) book.author = author
         if (ine) book.ine = ine
+
+        if (Array.isArray(bookshelves) && bookshelves.length > 0) {
+            for (let bookshelfId of bookshelves) {
+                const bookshelf = await Bookshelf.findById(bookshelfId);
+                if (bookshelf) {
+                    bookshelf.books.push(data);
+                    await bookshelf.save();
+                } else {
+                    console.warn(`Bookshelf not found: ${bookshelfId}`);
+                }
+            }
+        }
 
         await book.save();
 
