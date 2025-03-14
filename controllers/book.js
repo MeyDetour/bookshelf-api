@@ -160,7 +160,7 @@ async function getBook(req, res) {
 async function newBook(req, res) {
     try {
         console.log("create book")
-        const {...data} = req.body;
+        const {bookshelves,...data} = req.body;
 
         if (!data.title) return res.status(400).json({message:'Please enter name'});
         data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
@@ -168,8 +168,8 @@ async function newBook(req, res) {
         console.log(req.user.id)
         data.author = req.user.id;
         console.log("Data to create:", data);
-        if (Array.isArray(book.bookshelves) && book.bookshelves.length > 0) {
-            for (let bookshelfId of book.bookshelves) {
+        if (Array.isArray(bookshelves) && bookshelves.length > 0) {
+            for (let bookshelfId of bookshelves) {
                 const bookshelf = await Bookshelf.findOne(bookshelfId);
                 if (bookshelf) {
                     bookshelf.books.push(data);
