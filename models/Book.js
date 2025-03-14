@@ -17,7 +17,8 @@ const Book = new mongoose.Schema(
 
             get: value => value ? value : null,
             required: false,
-        }, pdf: {
+        },
+        pdf: {
             type: mongoose.SchemaTypes.String, //url de limage
 
             get: value => value ? value : null,
