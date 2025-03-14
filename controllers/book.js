@@ -168,22 +168,23 @@ async function newBook(req, res) {
         console.log(req.user.id)
         data.author = req.user.id;
         console.log("Data to create:", data);
+
+        let book = await Book.create({...data}).catch((err) => {
+            console.error("MongoDB Error:", err);
+            throw new Error(err);
+        });
+
         if (Array.isArray(bookshelves) && bookshelves.length > 0) {
             for (let bookshelfId of bookshelves) {
                 const bookshelf = await Bookshelf.findOne(bookshelfId);
                 if (bookshelf) {
-                    bookshelf.books.push(data);
+                    bookshelf.books.push(book._id);
                     await bookshelf.save();
                 } else {
                     console.error(`Bookshelf not found: ${bookshelfId}`);
                 }
             }
         }
-
-        let book = await Book.create({...data}).catch((err) => {
-            console.error("MongoDB Error:", err);
-            throw new Error(err);
-        });
 
         res.status(201).json(book);
     } catch (e) {
