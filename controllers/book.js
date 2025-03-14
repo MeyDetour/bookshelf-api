@@ -161,7 +161,7 @@ async function newBook(req, res) {
         console.log("create book")
         const {...data} = req.body;
 
-        if (!data.title) return res.status(400).send('Please enter name');
+        if (!data.title) return res.status(400).json({message:'Please enter name'});
         data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
 
         data.author = req.user.id;
