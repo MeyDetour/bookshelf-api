@@ -166,7 +166,11 @@ async function newBook(req, res) {
         console.log('user :',req.user)
         console.log(req.user.id)
         data.author = req.user.id;
-        let book = await Book.create({...data})
+        console.log("Data to create:", data);
+        let book = await Book.create({...data}).catch((err) => {
+            console.error("MongoDB Error:", err);
+            throw new Error(err);
+        });
 
         res.status(201).json(book);
     } catch (e) {
