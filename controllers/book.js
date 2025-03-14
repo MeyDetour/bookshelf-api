@@ -153,7 +153,7 @@ async function getBook(req, res) {
        return  res.status(200).json(book);
     } catch (err) {
         console.log(err)
-        return res.sendStatus(400).send('Error creating book. :' + e); // Token invalide ou expiré
+        return res.sendStatus(400).send('Error get book. :' + err); // Token invalide ou expiré
     }
 }
 
@@ -175,7 +175,7 @@ async function newBook(req, res) {
                     bookshelf.books.push(data);
                     await bookshelf.save();
                 } else {
-                    console.warn(`Bookshelf not found: ${bookshelfId}`);
+                    console.error(`Bookshelf not found: ${bookshelfId}`);
                 }
             }
         }
