@@ -170,7 +170,7 @@ async function newBook(req, res) {
         console.log("Data to create:", data);
         if (Array.isArray(book.bookshelves) && book.bookshelves.length > 0) {
             for (let bookshelfId of book.bookshelves) {
-                const bookshelf = await Bookshelf.findById(bookshelfId);
+                const bookshelf = await Bookshelf.findOne(bookshelfId);
                 if (bookshelf) {
                     bookshelf.books.push(data);
                     await bookshelf.save();
