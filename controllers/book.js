@@ -177,7 +177,8 @@ async function newBook(req, res) {
 
         if (!book){
             console.log("no book created")
-            return
+            return res.status(400).json({ message: "No book created"});
+
         };
         if (Array.isArray(bookshelves) && bookshelves.length > 0) {
             for (let bookshelfId of bookshelves) {
@@ -191,9 +192,9 @@ async function newBook(req, res) {
             }
         }
 
-        res.status(201).json(book);
+       return  res.status(201).json(book);
     } catch (e) {
-        res.status(500).send('Error creating book. :' + e);
+      return   res.status(500).send('Error creating book. :' + e);
     }
 }
 
