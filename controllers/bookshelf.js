@@ -14,7 +14,7 @@ async function getBookshelf(req, res) {
     try {
         const {id} = req.params;
 
-        const bookshelf = await Bookshelf.findById(id).select('name').populate({
+        const bookshelf = await Bookshelf.findById(id).select('name author').populate({
             path: 'books',
             select: 'title publishedYear description image author ine'
         });
@@ -24,7 +24,7 @@ async function getBookshelf(req, res) {
             return res.status(404).send('No bookshelf found.');
         }
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's not your bookshelf"});
         }
         return res.status(200).json(bookshelf);
 
@@ -57,7 +57,7 @@ async function editBookshelf(req, res) {
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(401).json({"message": "It's no your bookshelf"});
+            return res.status(401).json({"message": "It's not your bookshelf"});
         }
 
         const {name} = req.body;
@@ -83,7 +83,7 @@ async function removeBookshelf(req, res) {
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's not your bookshelf"});
         }
         const booksAssociated = await Book.find({bookshelf: id})
         if (booksAssociated.length !== 0) return res.status(400).send('Bookshelf has many books');
@@ -113,7 +113,7 @@ async function addBookToBookshelf(req, res) {
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's no your bookshelf"});
+            return res.status(403).json({"message": "It's not your bookshelf"});
         }
         const book = await Book.findById(bookId)
         if (!book) return res.status(404).send('Book not found.');
