@@ -53,7 +53,7 @@ async function newBookshelf(req, res) {
 async function editBookshelf(req, res) {
     try {
         const {id} = req.params
-        const bookshelf = await Bookshelf.findById(id)
+        const bookshelf = await Bookshelf.findOne(id)
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if (!bookshelf.author.equals(req.user.id)) {
@@ -61,7 +61,7 @@ async function editBookshelf(req, res) {
         }
 
         const {name} = req.body;
-        let bookshelfExist = await Bookshelf.findOne({name})
+        let bookshelfExist = await Bookshelf.findOne({name:name})
         if (bookshelfExist) return res.status(404).send('bookshelf name is already taken.');
 
         if (!name) return res.status(400).send('Please enter name.');
@@ -79,7 +79,7 @@ async function editBookshelf(req, res) {
 async function removeBookshelf(req, res) {
     try {
         const {id} = req.params
-        const bookshelf = await Bookshelf.findById(id)
+        const bookshelf = await Bookshelf.findOne(id)
 
         if (!bookshelf) return res.status(404).send('Bookshelf not found.');
         if (!bookshelf.author.equals(req.user.id)) {
