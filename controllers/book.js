@@ -171,7 +171,8 @@ async function newBook(req, res) {
 
         let book = await Book.create({...data}).catch((err) => {
             console.error("MongoDB Error:", err);
-            throw new Error(err);
+            return res.status(500).json({ message: "Error creating book in database", error: err.message });
+
         });
 
         if (!book){
