@@ -152,7 +152,8 @@ async function getBook(req, res) {
         }
        return  res.status(200).json(book);
     } catch (err) {
-        return res.sendStatus(400); // Token invalide ou expiré
+        console.log(err)
+        return res.sendStatus(400).send('Error creating book. :' + e); // Token invalide ou expiré
     }
 }
 
