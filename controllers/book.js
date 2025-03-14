@@ -163,8 +163,8 @@ async function newBook(req, res) {
 
         if (!data.title) return res.status(400).json({message:'Please enter name'});
         data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
-        console.log('user :',res.user)
-        console.log(res.user.id)
+        console.log('user :',req.user)
+        console.log(req.user.id)
         data.author = req.user.id;
         let book = await Book.create({...data})
 
