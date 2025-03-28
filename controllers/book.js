@@ -189,7 +189,7 @@ async function newBook(req, res) {
 
         }
 
-        if (Array.isArray(bookshelves) && bookshelves.length > 0) {
+        if (bookshelves.length > 0) {
             for (let bookshelfId of bookshelves) {
                 const bookshelf = await Bookshelf.findOne(bookshelfId);
                 if (bookshelf) {
