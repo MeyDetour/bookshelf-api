@@ -191,7 +191,7 @@ async function newBook(req, res) {
 
         if (bookshelves.length > 0) {
             for (let bookshelfId of bookshelves) {
-                const bookshelf = await Bookshelf.findOne({id:bookshelfId});
+                const bookshelf = await Bookshelf.findById(bookshelfId);
                 if (bookshelf) {
                     bookshelf.books.push(book._id);
                     await bookshelf.save();
