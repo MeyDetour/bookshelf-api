@@ -173,6 +173,7 @@ async function newBook(req, res) {
         console.log(req.user.id)
         data.author = req.user.id;
         console.log("Data to create:", data);
+        console.log("bookshelve : ",bookshelves);
         let book;
         try {
              book = await Book.create({...data})
