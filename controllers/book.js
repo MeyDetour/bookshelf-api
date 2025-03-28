@@ -203,7 +203,7 @@ async function newBook(req, res) {
 
         return res.status(201).json(book);
     } catch (e) {
-        return res.status(500).send('Error creating book. :' + e);
+        return res.status(500).send({message:'Error creating book. :' + e});
     }
 }
 
