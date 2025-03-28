@@ -196,6 +196,10 @@ async function newBook(req, res) {
                 if (bookshelf) {
                     bookshelf.books.push(book._id);
                     await bookshelf.save();
+                    book.bookshelves.push(bookshelf);
+                    await book.save();
+
+
                 } else {
                     console.error(`Bookshelf not found: ${bookshelfId}`);
                 }
