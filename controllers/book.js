@@ -166,7 +166,7 @@ async function newBook(req, res) {
         data.title = String(data.title).charAt(0).toUpperCase() + String(data.title).slice(1)
 
         if (!bookshelves || bookshelves.length === 0){
-            return res.status(500).json({message: "Please choose bookshelf(ves)"});
+            return res.status(409).json({message: "Please choose bookshelf(ves)"});
         }
 
         console.log('user :', req.user)
