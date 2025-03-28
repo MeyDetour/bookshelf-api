@@ -201,7 +201,10 @@ async function newBook(req, res) {
             }
         }
 
-        return res.status(201).json(book);
+        return res.status(201).json(book.select('title image pdf description publishedYear author ine ').populate({
+            path: 'bookshelves',
+            select: "name"
+        }));
     } catch (e) {
         return res.status(500).send({message:'Error creating book. :' + e});
     }
