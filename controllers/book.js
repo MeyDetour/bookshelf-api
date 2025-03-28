@@ -175,7 +175,10 @@ async function newBook(req, res) {
         console.log("Data to create:", data);
         let book;
         try {
-             book = await Book.create({...data})
+             book = await Book.create({...data}).select('title image pdf description publishedYear author ine ').populate({
+                path: 'bookshelves',
+                select: "name"
+            })
         } catch (e) {
             console.error("MongoDB Error:", err);
             return res.status(500).json({message: "Error creating book in database", error: e.message});
@@ -201,10 +204,7 @@ async function newBook(req, res) {
             }
         }
 
-        return res.status(201).json(book.select('title image pdf description publishedYear author ine ').populate({
-            path: 'bookshelves',
-            select: "name"
-        }));
+        return res.status(201).json(book);
     } catch (e) {
         return res.status(500).send({message:'Error creating book. :' + e});
     }
