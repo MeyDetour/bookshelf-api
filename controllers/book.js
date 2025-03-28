@@ -201,6 +201,8 @@ async function newBook(req, res) {
                 }
             }
         }
+        console.log("book crezated : ",book);
+        console.log("book bookshelves : ",book.bookshelves);
         await book.populate({ path: "bookshelves", select: "name" });
 
         return res.status(201).json(book);
