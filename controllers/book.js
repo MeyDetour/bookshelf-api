@@ -311,7 +311,7 @@ async function removeBook(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
         if (!book) return res.status(404).send({message:'Book not found.'});
-        if (!bookshelf.author.equals(req.user.id)) {
+        if (!book.author.equals(req.user.id)) {
             return res.status(403).json({message: "It's not your book"});
         }
         if (book.image) {
