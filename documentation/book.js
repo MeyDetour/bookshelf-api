@@ -85,7 +85,7 @@ const data = [
         }
         ,
         "responseJson": {
-            "message": "ok",
+            message: "ok",
         }
     }, {
         'title': 'Edit one Book',
@@ -101,7 +101,7 @@ const data = [
             "ine": "string (NULL)"
         },
         "responseJson": {
-            "message": "ok",
+            message: "ok",
         }
     },{
         'title': 'Remove one Book',

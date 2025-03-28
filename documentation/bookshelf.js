@@ -61,7 +61,7 @@ const data = [
 
         ,
         "responseJson": {
-            "message": "ok"
+            message: "ok"
         }
     }, {
         'title': 'Edit bookshelf',
@@ -74,7 +74,7 @@ const data = [
         }
         ,
         "responseJson": {
-            "message": "ok"
+            message: "ok"
         }
     }
     , {

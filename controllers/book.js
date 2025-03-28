@@ -55,20 +55,20 @@ async function uploadImageToBook(req, res) {
 
         upload.single('image')(req, res, async (err) => {
             if (err) {
-                return res.status(500).send('Error uploading file.');
+                return res.status(500).send({message:'Error uploading file.'});
             }
             if (!req.file) {
-                return res.status(400).send('No file uploaded.');
+                return res.status(400).send({message:'No file uploaded.'});
             }
             const {id} = req.params
             const book = await Book.findById(id)
-            if (!book) return res.status(404).send('Book not found.');
+            if (!book) return res.status(404).send({message:'Book not found.'});
             if (!bookshelf.author.equals(req.user.id)) {
-                return res.status(403).json({"message": "It's not your book"});
+                return res.status(403).json({message: "It's not your book"});
             }
             if (book.image) {
                 let removal = await removeImageFromServer(book)
-                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
+                if (removal != null) return res.status(500).send({message:"Error during removal of book's image on server. :" + removal});
 
             }
 
@@ -76,10 +76,10 @@ async function uploadImageToBook(req, res) {
             book.image = `/uploads/${encodeURIComponent(req.file.filename)}`;
             await book.save();
 
-            return res.status(201).json({"message": "ok"});
+            return res.status(201).json({message: "ok"});
         });
     } catch (e) {
-        res.status(500).send('Error upload image to book. :' + e);
+        res.status(500).send({message:'Error upload image to book. :' + e});
     }
 }
 
@@ -88,20 +88,20 @@ async function uploadPdfToBook(req, res) {
 
         uploadpdf.single('pdf')(req, res, async (err) => {
             if (err) {
-                return res.status(500).send('Error uploading file.' + err);
+                return res.status(500).send({message:'Error uploading file.' + err});
             }
             if (!req.file) {
-                return res.status(400).send('No file uploaded.');
+                return res.status(400).send({message:'No file uploaded.'});
             }
             const {id} = req.params
             const book = await Book.findById(id)
-            if (!book) return res.status(404).send('Book not found.');
+            if (!book) return res.status(404).send({message:'Book not found.'});
             if (!bookshelf.author.equals(req.user.id)) {
-                return res.status(403).json({"message": "It's nott your book"});
+                return res.status(403).json({message: "It's nott your book"});
             }
             if (book.pdf) {
                 let removal = await removePdfFromServer(book)
-                if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
+                if (removal != null) return res.status(500).send({message:"Error during removal of book's image on server. :" + removal});
 
             }
 
@@ -109,10 +109,10 @@ async function uploadPdfToBook(req, res) {
             book.pdf = `/uploads/${encodeURIComponent(req.file.filename)}`;
             await book.save();
 
-            return res.status(201).json({"message": "ok"});
+            return res.status(201).json({message: "ok"});
         });
     } catch (e) {
-        return res.status(500).send('Error upload pdf to book. :' + e);
+        return res.status(500).send({message:'Error upload pdf to book. :' + e});
     }
 }
 
@@ -125,7 +125,7 @@ async function getBooks(req, res) {
         })
         res.status(200).json(books);
     } catch (err) {
-        return res.sendStatus(400); // Token invalide ou expiré
+        return res.status(500).send({message:'Error get books. :' + e});
     }
 }
 
@@ -138,7 +138,7 @@ async function getAllBooks(req, res) {
         })
         res.status(200).json(books);
     } catch (err) {
-        return res.sendStatus(400); // Token invalide ou expiré
+        return res.status(500).send({message:'Error get all books. :' + e});
     }
 }
 
@@ -146,14 +146,14 @@ async function getBook(req, res) {
     try {
         const {id} = req.params
         const book = await Book.findById(id)
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!book.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
         return res.status(200).json(book);
     } catch (err) {
         console.log(err)
-        return res.status(400).send('Error get book. :' + err); // Token invalide ou expiré
+        return res.status(400).send({message:'Error get book. :' + err}); // Token invalide ou expiré
     }
 }
 
@@ -201,7 +201,7 @@ async function newBook(req, res) {
 
 
                 } else {
-                    console.error(`Bookshelf not found: ${bookshelfId}`);
+                    return res.status(500).send({message:`Bookshelf not found: ${bookshelfId}`});
                 }
             }
         }
@@ -223,9 +223,9 @@ async function editBook(req, res) {
         const book = await Book.findById(id)
         let {title, description, publishedYear, ine, author, bookshelves} = req.body
 
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
         if (title) {
             title = String(title).charAt(0).toUpperCase() + String(title).slice(1)
@@ -243,16 +243,16 @@ async function editBook(req, res) {
                     bookshelf.books.push(data);
                     await bookshelf.save();
                 } else {
-                    console.warn(`Bookshelf not found: ${bookshelfId}`);
+                    return res.status(400).send({message:`Bookshelf not found: ${bookshelfId}`});
                 }
             }
         }
 
         await book.save();
 
-        res.status(200).json({"message": "ok"});
+        res.status(200).json({message: "ok"});
     } catch (e) {
-        res.status(500).send('Error updating book. :' + e);
+        res.status(500).send({message:'Error updating book. :' + e});
     }
 }
 
@@ -262,21 +262,21 @@ async function removeImage(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
 
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
-        if (book.image == null) return res.status(200).json({"message": "ok"});
+        if (book.image == null) return res.status(200).json({message: "ok"});
 
         let removal = await removeImageFromServer(book)
-        if (removal != null) return res.status(500).send("Error during removal of book's image on server. :" + removal);
+        if (removal != null) return res.status(500).send({message:"Error during removal of book's image on server. :" + removal});
 
 
-        return res.status(200).json({"message": "ok"});
+        return res.status(200).json({message: "ok"});
 
 
     } catch (e) {
-        res.status(500).send('Error remove books image. :' + e);
+        res.status(500).send({message:'Error remove books image. :' + e});
     }
 
 }
@@ -287,21 +287,21 @@ async function removePdf(req, res) {
         const {id} = req.params
         const book = await Book.findById(id)
 
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
-        if (book.pdf == null) return res.status(200).json({"message": "ok"});
+        if (book.pdf == null) return res.status(200).json({message: "ok"});
 
         let removal = await removePdfFromServer(book)
-        if (removal != null) return res.status(500).send("Error during removal of book's pdf on server. :" + removal);
+        if (removal != null) return res.status(500).send({message:"Error during removal of book's pdf on server. :" + removal});
 
 
-        return res.status(200).json({"message": "ok"});
+        return res.status(200).json({message: "ok"});
 
 
     } catch (e) {
-        res.status(500).send('Error remove books image. :' + e);
+        res.status(500).send({message:'Error remove books image. :' + e});
     }
 
 }
@@ -310,9 +310,9 @@ async function removeBook(req, res) {
     try {
         const {id} = req.params
         const book = await Book.findById(id)
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
         if (book.image) {
             let removal = await removeImageFromServer(book)
@@ -325,9 +325,9 @@ async function removeBook(req, res) {
 
         await book.deleteOne()
 
-        res.status(200).json({"message": "ok"});
+        res.status(200).json({message: "ok"});
     } catch (e) {
-        res.status(500).send('Error remove book. :' + e);
+        res.status(500).send({message:'Error remove book. :' + e});
     }
 }
 
@@ -338,7 +338,7 @@ async function searchBook(req, res) {
         const books = await Book.find({$text: {$search: searchTerm}, author: req.user.id})
         res.status(200).json(books);
     } catch (e) {
-        res.status(500).send('Error remove book. :' + e);
+        res.status(500).send({message:'Error remove book. :' + e});
     }
 }
 
@@ -374,7 +374,7 @@ async function sortBooks(req, res) {
     try {
         const {type} = req.params;
         let books = [];
-        if (!type) return res.status(404).send('type not found.');
+        if (!type) return res.status(404).send({ message: 'type not found.'});
         switch (type) {
             case 'title-asc':
                 books = await Book.find({author: req.user.id}).sort({title: 1})
@@ -391,7 +391,7 @@ async function sortBooks(req, res) {
 
         return res.status(200).json(books);
     } catch (e) {
-        res.status(500).send('Error remove book. :' + e);
+        res.status(500).send({message:'Error remove book. :' + e});
     }
 }
 

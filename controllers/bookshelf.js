@@ -24,12 +24,12 @@ async function getBookshelf(req, res) {
             return res.status(404).send('No bookshelf found.');
         }
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your bookshelf"});
+            return res.status(403).json({message: "It's not your bookshelf"});
         }
         return res.status(200).json(bookshelf);
 
     } catch (e) {
-        return res.status(500).send('Error getting bookshelf: ' + e);
+        return res.status(500).send({message:'Error getting bookshelf: ' + e});
     }
 }
 
@@ -43,7 +43,7 @@ async function newBookshelf(req, res) {
         if (bookshelfExist) return res.status(409).json({message:'bookshelf name is already taken.'});
 
         await Bookshelf.create({name: name, author: req.user.id})
-        return res.status(201).json({"message": "ok"});
+        return res.status(201).json({message: "ok"});
     } catch (e) {
         return res.status(500).json({'message': 'Error during creation of bookshelf .' + e});
     }
@@ -55,9 +55,9 @@ async function editBookshelf(req, res) {
         const {id} = req.params
         const bookshelf = await Bookshelf.findOne(id)
 
-        if (!bookshelf) return res.status(404).send('Bookshelf not found.');
+        if (!bookshelf) return res.status(404).send({message:'Bookshelf not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(401).json({"message": "It's not your bookshelf"});
+            return res.status(401).json({message: "It's not your bookshelf"});
         }
 
         const {name} = req.body;
@@ -69,11 +69,11 @@ async function editBookshelf(req, res) {
         bookshelf.name = name;
 
         await bookshelf.save()
-        return res.status(200).json({"message": "ok"});
+        return res.status(200).json({message: "ok"});
 
     } catch (e) {
-        return res.status(500).send('New bookshelf .' + e);
-    }
+       return res.status(500).send({message:'Error inNew bookshelf .' + e});
+ }
 }
 
 async function removeBookshelf(req, res) {
@@ -81,9 +81,9 @@ async function removeBookshelf(req, res) {
         const {id} = req.params
         const bookshelf = await Bookshelf.findOne(id)
 
-        if (!bookshelf) return res.status(404).send('Bookshelf not found.');
+        if (!bookshelf) return res.status(404).send({message:'Bookshelf not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your bookshelf"});
+            return res.status(403).json({message: "It's not your bookshelf"});
         }
         const booksAssociated = await Book.find({bookshelf: id})
         if (booksAssociated.length !== 0) return res.status(400).send('Bookshelf has many books');
@@ -100,7 +100,7 @@ async function removeBookshelf(req, res) {
         }
 
         await bookshelf.deleteOne()
-        return res.status(200).json({"message": "ok"});
+        return res.status(200).json({message: "ok"});
     } catch (e) {
         return res.status(500).send('New bookshelf .' + e);
     }
@@ -111,23 +111,23 @@ async function addBookToBookshelf(req, res) {
         const {bookId, bookshelfId} = req.params
         const bookshelf = await Bookshelf.findById(bookshelfId)
 
-        if (!bookshelf) return res.status(404).send('Bookshelf not found.');
+        if (!bookshelf) return res.status(404).send({message:'Bookshelf not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your bookshelf"});
+            return res.status(403).json({message: "It's not your bookshelf"});
         }
         const book = await Book.findById(bookId)
-        if (!book) return res.status(404).send('Book not found.');
+        if (!book) return res.status(404).send({message:'Book not found.'});
         if (!book.author.equals(req.user.id)) {
-            return res.status(403).json({"message": "It's not your book"});
+            return res.status(403).json({message: "It's not your book"});
         }
         if (!book.bookshelves.includes(bookshelfId)) {
             bookshelf.books.push(bookId)
             await bookshelf.save()
             book.bookshelves.push(bookshelfId)
             await book.save()
-            return res.status(200).json({"message": "ok"});
+            return res.status(200).json({message: "ok"});
         }
-        return res.status(200).json({"message": "Bookshelf already contains this book"});
+        return res.status(200).json({message: "Bookshelf already contains this book"});
     } catch (e) {
         return res.status(500).send('New bookshelf .' + e);
     }
@@ -177,7 +177,7 @@ async function sortBookshelves(req, res) {
 
         return res.status(200).json(bookshelves);
     } catch (e) {
-        res.status(500).send('Error remove book. :' + e);
+        res.status(500).send({message:'Error remove book. :' + e});
     }
 }
 
