@@ -50,7 +50,7 @@ async function newBookshelf(req, res) {
 async function editBookshelf(req, res) {
     try {
         const {id} = req.params
-        const bookshelf = await Bookshelf.findOne(id)
+        const bookshelf = await Bookshelf.findById(id)
 
         if (!bookshelf) return res.status(404).send({message:'Bookshelf not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
@@ -76,14 +76,14 @@ async function editBookshelf(req, res) {
 async function removeBookshelf(req, res) {
     try {
         const {id} = req.params
-        const bookshelf = await Bookshelf.findOne(id)
+        const bookshelf = await Bookshelf.findById(id)
 
         if (!bookshelf) return res.status(404).send({message:'Bookshelf not found.'});
         if (!bookshelf.author.equals(req.user.id)) {
             return res.status(403).json({message: "It's not your bookshelf"});
         }
         const booksAssociated = await Book.find({bookshelf: id})
-        if (booksAssociated.length !== 0) return res.status(400).send('Bookshelf has many books');
+        if (booksAssociated.length !== 0) return res.status(400).send({message:'Bookshelf has many books'});
         for (const bookAssociated of booksAssociated) {
             if (book.bookshelves.includes(id)) {
                 book.bookshelves = book.bookshelves.filter(id => id.toString() !== id);
@@ -92,14 +92,14 @@ async function removeBookshelf(req, res) {
                 bookshelf.books = bookshelf.books.filter(id => id.toString() !== bookAssociated.id);
                 await bookshelf.save();
 
-                return res.status(200).send('Bookshelf removed from book and book removed from bookshelf successfully.');
+                return res.status(200).send({message:'ok'});
             }
         }
 
         await bookshelf.deleteOne()
         return res.status(200).json({message: "ok"});
     } catch (e) {
-        return res.status(500).send('New bookshelf .' + e);
+        return res.status(500).send({message:'New bookshelf .' + e});
     }
 }
 
